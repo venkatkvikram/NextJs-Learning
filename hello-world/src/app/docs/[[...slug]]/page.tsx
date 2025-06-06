@@ -21,6 +21,6 @@ export default Docs;
 //                 -> To access different URL segments in code we have to use params object
 // OPTIONAL CATCH ALL SEGMENTS
 //    Wrap the folder in extra pair of square brackets [[...slug]]
-// 
+//    If the docs folder page is different based on URL then use optional catch all route
 
 
