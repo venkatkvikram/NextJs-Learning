@@ -37,4 +37,34 @@ app/
 
 ```
 ✅ Note: Wrapping the folder name with parentheses (auth) tells Next.js to use it only for organization and not include it in the route path.
+</details>
 
+<details>
+<summary><strong>📁 Layouts</strong></summary>
+
+## ✅ What are Layouts?
+
+A layout is a **UI that is shared between multiple pages in your application**, creating a consistent structure across the entire application.
+
+---
+
+## 🛠️ How to Create Layouts?
+
+- Default export a React component from a `layout.js` or `layout.tsx` file.
+- That component will take a `children` prop, which Next.js will populate with your page content.
+- Next.js provides one root layout by default in `app/layout.tsx`.
+
+```tsx
+// Example layout.tsx
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <Header />
+      <main>{children}</main>
+      <Footer />
+    </div>
+  );
+}
+```
+
+![How Layouts Work](./hello-world/public/png/HowLayoutsWork.png)
