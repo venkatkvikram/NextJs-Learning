@@ -75,6 +75,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 <summary><strong>📁 Nested Layouts</strong></summary>
 
 ## ✅ What are Nested Layouts?
+
 - Layouts can be nested.
 - Eg: If you want a special layout for products details folder we can do that by adding a **layout.tsx/jsx** inside products details folder.
 - NextJs app router supports nested layouts letting you customize different parts of your app exactly how you want to
@@ -82,3 +83,4 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 ![How Nested Layouts Work 1](./hello-world/public/png/Layouts/HowNestedLayoutWork.png)
 
 ![How Nested Layouts Work 2](./hello-world/public/png/Layouts/HowNestedLayoutWork2.png)
+
