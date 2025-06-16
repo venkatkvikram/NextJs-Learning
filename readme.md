@@ -83,4 +83,82 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 ![How Nested Layouts Work 1](./hello-world/public/png/Layouts/HowNestedLayoutWork.png)
 
 ![How Nested Layouts Work 2](./hello-world/public/png/Layouts/HowNestedLayoutWork2.png)
+</details>
+<details>
+<summary><strong>📁 Multi Root Layouts</strong></summary>
 
+## 🎯 Scenario
+
+Imagine you're building an application with the following pages:
+
+- `/revenue`
+- `/customers`
+- `/login`
+- `/register`
+
+You want:
+
+- `Revenue` & `Customers` to use a **full layout** with a **Header** and **Footer**.
+- `Login` & `Register` to use a **minimal layout** (without header/footer).
+
+---
+
+## ❌ The Problem
+
+If you define `Header` and `Footer` inside the default `app/layout.tsx`, it will be applied to **all pages**, including login and register—which you don't want.
+
+---
+
+## ✅ The Solution — Multi Root Layouts
+
+Using **Route Groups** and **multiple layout.tsx files**, you can apply different root layouts to different sections of your app.
+
+### 🧠 What Are Route Groups?
+
+- Help organize project structure **without affecting the URL**.
+- Allow you to apply layouts **selectively** to specific parts of the app.
+
+---
+
+## 🛠️ Steps to Implement
+
+1. Inside the `app/` directory, create two **route groups**:
+
+```
+app/
+├── (marketing)/
+│ ├── layout.tsx ⬅️ Full layout (Header + Footer)
+│ ├── page.tsx ⬅️ Root page (if needed)
+│ ├── revenue/
+│ │ └── page.tsx
+│ └── customers/
+│ └── page.tsx
+
+├── (auth)/
+│ ├── layout.tsx ⬅️ Minimal layout (no Header/Footer)
+│ ├── login/
+│ │ └── page.tsx
+│ └── register/
+│ └── page.tsx
+```
+
+> 📝 Parentheses around folder names like `(marketing)` or `(auth)` make them **invisible in the URL path**, but still let you organize and apply layouts.
+
+---
+
+## 🖼️ Folder Structure Visual
+
+![Multiple Root Layouts Folder Structure](./png/MultiRootLayoutFs.png)
+
+> ✅ Make sure the image is located at `public/png/MultiRootLayoutFs.png`
+
+---
+
+## 🔚 Result
+
+- `/revenue` and `/customers` will use the **marketing layout** (with header and footer).
+- `/login` and `/register` will use the **auth layout** (minimal).
+
+This approach keeps your application modular, scalable, and cleanly separated by purpose.
+
+</details>
