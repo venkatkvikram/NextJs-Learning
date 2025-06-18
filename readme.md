@@ -16,6 +16,7 @@ When building features like authentication (`register`, `login`, `forgot-passwor
 /auth/login
 /auth/forgot-password
 ```
+
 However, if you want the URLs to be clean like this:
 
 ```txt
@@ -23,6 +24,7 @@ However, if you want the URLs to be clean like this:
 /login
 /forgot-password
 ```
+
 ...but still want to organize files under auth, you can use Route Groups.
 
 ```bash
@@ -36,7 +38,9 @@ app/
 │       └── page.tsx
 
 ```
+
 ✅ Note: Wrapping the folder name with parentheses (auth) tells Next.js to use it only for organization and not include it in the route path.
+
 </details>
 
 <details>
@@ -68,8 +72,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 ```
 
 ![How Layouts Work](./hello-world/public/png/Layouts/HowLayoutsWork.png)
-</details>
 
+</details>
 
 <details>
 <summary><strong>📁 Nested Layouts</strong></summary>
@@ -83,7 +87,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 ![How Nested Layouts Work 1](./hello-world/public/png/Layouts/HowNestedLayoutWork.png)
 
 ![How Nested Layouts Work 2](./hello-world/public/png/Layouts/HowNestedLayoutWork2.png)
+
 </details>
+
 <details>
 <summary><strong>📁 Multi Root Layouts</strong></summary>
 
@@ -162,3 +168,98 @@ app/
 This approach keeps your application modular, scalable, and cleanly separated by purpose.
 
 </details>
+
+<details>
+<summary><strong>📁 Metadata (Dynamic and Static)</strong></summary>
+
+## 📘 Overview
+
+Next.js allows you to define both **static** and **dynamic metadata** for SEO and page titles. This metadata can be defined per route, and behaves differently depending on whether your route is a server component or a client component.
+
+---
+
+## ⚡ Dynamic Metadata
+
+Dynamic metadata is useful when the metadata depends on:
+
+- Route parameters
+- External data (e.g., from an API)
+- Parent segment metadata
+
+You define dynamic metadata by **exporting a `generateMetadata()` function** from `page.tsx` or `layout.tsx`.
+
+### 📄 Example: Dynamic Metadata in `[productId]/page.tsx`
+
+```tsx
+/**
+ * @param param0
+ * Receives param Props
+ * @returns
+ * Returns a Promise of type Metadata
+ */
+export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+  const id = params.productId;
+  return {
+    title: id,
+  };
+};
+```
+
+> ⚠️ You cannot use both a metadata object and a generateMetadata function in the same route segment — it's one or the other.
+
+## 🚫 Limitation
+
+Dynamic metadata will not work inside components marked with "use client" directive.
+
+> 
+> 
+> Metadata cannot be generated inside a Client Components
+![UseClient Error example](hello-world\public\png\Metadata\useClientError.png)
+
+## ✅ Solution
+
+- Keep all metadata logic inside Server Components. If a page includes both server-rendered content and client-side logic:
+
+- Split out the client-side logic into a separate component.
+
+- Move the "use client" code into a subcomponent like ClientCounter.tsx.
+
+- Keep page.tsx as a server component to handle metadata.
+
+```
+app/
+└── counter/
+    ├── page.tsx         # Server component with metadata
+    └── ClientCounter.tsx  # Client-side logic (with "use client")
+```
+
+## 🏷️ Title Metadata Options
+
+You can define title as:
+
+A simple string
+
+Or an object for more control
+
+When using the object form, you can use:
+
+1. default — fallback title for child routes that don't define their own
+
+2. template — define title patterns (useful for consistent suffixes/prefixes)
+
+3. absolute — override all patterns set by parent segments
+
+```
+export const metadata: Metadata = {
+  title: {
+    template: "%s | MySite",
+    default: "Welcome to MySite",
+    absolute: "Standalone Page Title" ## Can be used in       individual page.tsx
+  }
+}
+```
+
+> 📝 Use absolute to break out of the inherited title formatting defined in parent layouts.
+
+</details>
+
