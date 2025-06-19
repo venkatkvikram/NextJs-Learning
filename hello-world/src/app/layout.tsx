@@ -1,5 +1,6 @@
 import { Metadata } from "next"; //for ts support
 
+import './globals.css';
 
 
 export const metadata: Metadata = {

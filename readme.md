@@ -263,3 +263,96 @@ export const metadata: Metadata = {
 
 </details>
 
+
+
+
+<details>
+<summary><strong>📁 Navigation - Link Component</strong></summary>
+
+## 🚀 Client-Side Navigation in Next.js
+
+In Next.js, client-side navigation is handled using the built-in **`Link`** component. This improves performance by avoiding full page reloads and keeping transitions smooth.
+
+---
+
+## 🧭 What is the `<Link>` Component?
+
+- The `<Link>` component is provided by **Next.js** for client-side routing.
+- It wraps around an `<a>` tag under the hood and is the **primary way to navigate** between routes in a Next.js app.
+
+---
+
+## ✨ Features
+
+- **Fast navigation** without reloading the page
+- Can **prefetch pages** in the background
+- Accepts a `replace` prop to **replace** the current history entry instead of pushing a new one
+
+---
+
+## 🧩 How to Use
+
+```tsx
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <nav>
+      <Link href="/about">About</Link>
+      <Link href="/contact" replace>Contact</Link> {/* replaces current history */}
+    </nav>
+  );
+}
+```
+
+## 🎨 Active Link Styling
+To style the active link, you can use the usePathname() hook provided by next/navigation:
+
+```tsx
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+const NavLinks = () => {
+  const pathname = usePathname();
+
+  return (
+    <nav>
+      <Link
+        href="/dashboard"
+        className={pathname === '/dashboard' ? 'text-blue-500 font-bold' : ''}
+      >
+        Dashboard
+      </Link>
+      <Link
+        href="/profile"
+        className={pathname === '/profile' ? 'text-blue-500 font-bold' : ''}
+      >
+        Profile
+      </Link>
+    </nav>
+  );
+};
+
+export default NavLinks;
+
+```
+
+>💡 This helps apply active styles based on the current route.
+
+## 📚 Summary
+- Use Link from next/link for all internal navigation
+
+- Use replace when you want to avoid adding to browser history
+
+- Use usePathname() to highlight the currently active link
+
+## ✅ Usage Instructions:
+
+- You can copy-paste this into your README.md.
+
+- The use client directive is required in the file where usePathname() is used.
+
+- Styling can be adapted to match your CSS framework (Tailwind, CSS modules, etc.).
+
