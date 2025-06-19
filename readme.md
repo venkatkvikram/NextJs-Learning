@@ -267,7 +267,7 @@ export const metadata: Metadata = {
 
 
 <details>
-<summary><strong>📁 Navigation - Link Component</strong></summary>
+<summary><strong>📁 Navigation - Link Component (Part 1)</strong></summary>
 
 ## 🚀 Client-Side Navigation in Next.js
 
@@ -355,9 +355,9 @@ export default NavLinks;
 - The use client directive is required in the file where usePathname() is used.
 
 - Styling can be adapted to match your CSS framework (Tailwind, CSS modules, etc.).
-
+</details>
 <details>
-<summary><strong>📁 Params and Search Params</strong></summary>
+<summary><strong>📁 Params and Search Params (Part 2)</strong></summary>
 
 ## 🔍 What Are `params` and `searchParams`?
 
@@ -431,3 +431,102 @@ Layouts are meant for shared UI like headers, sidebars, footers — not dynamic 
 
     - Allowing searchParams would break reusability and caching optimizations.
 
+</details>
+
+
+
+<details>
+<summary><strong>📁 Programmatic Navigation (Part 3)</strong></summary>
+
+## 🔁 What is Programmatic Navigation?
+
+Programmatic navigation is when you navigate to a different route **based on logic or user actions**, rather than a static `<Link>` component.
+
+Next.js supports this in both:
+
+- **Client Components** — via `useRouter().push()`
+- **Server Components** — via `redirect()` or `notFound()`
+
+---
+
+## ⚛️ Client-Side Navigation (`router.push()`)
+
+Use the `useRouter()` hook from `next/router` to navigate programmatically on the client.
+
+### ✅ Example: Order Button with Navigation
+
+```tsx
+'use client';
+
+import { useRouter } from 'next/router';
+
+const OrderProduct = () => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    console.log('Placing the order');
+    router.push('/'); // navigates to home
+  };
+
+  return (
+    <>
+      <h1>Order Product</h1>
+      <button onClick={handleClick}>Place Order</button>
+    </>
+  );
+};
+
+export default OrderProduct;
+```
+>🔁 router.push("/path") works like a <Link> — it adds a new entry to the browser history.
+
+## 🧠 Server-Side Navigation (redirect() and notFound())
+In server components, you can't use router.push(). Instead, use:
+
+redirect("/path") — to programmatically redirect
+
+notFound() — to throw a 404
+
+These come from next/navigation.
+
+### ✅ Example: Redirecting from Dynamic Route
+
+```tsx
+import { redirect, notFound } from 'next/navigation';
+
+const ProductReviewId = async ({ params }: {
+  params: Promise<{ productId: string; reviewId: string }>
+}) => {
+  const { productId, reviewId } = await params;
+
+  if (parseInt(reviewId) > 1000) {
+    // notFound(); // throw 404
+    redirect('/products'); // redirect to products page
+  }
+
+  return (
+    <div>Review for {productId} with review {reviewId}</div>
+  );
+};
+
+export default ProductReviewId;
+```
+>🚨 These only work in server components — don’t use them in components marked with "use client".
+
+## 📚 Summary
+### 🧭 Feature Support: Client vs Server Component
+
+| Feature         | Client Component (`"use client"`) | Server Component |
+|-----------------|-----------------------------------|------------------|
+| `router.push()` | ✅ Yes                             | ❌ No            |
+| `redirect()`    | ❌ No                              | ✅ Yes           |
+| `notFound()`    | ❌ No                              | ✅ Yes           |
+
+## ✅ When to Use What
+- Use router.push() for buttons, user actions, and dynamic client-side flows
+
+- Use redirect() when access control or conditions must be handled during render
+
+- Use notFound() for conditionally throwing a 404 in server logic
+
+</details>

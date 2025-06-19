@@ -1,15 +1,18 @@
-import { notFound } from "next/navigation";
+"use client";
 
-const ProductReviewId = async({params} : {
-    params: Promise< { productId: string, reviewId: string}>
-}) => {
-    const {productId, reviewId} = await params;
-    if(parseInt(reviewId) > 1000 ) {
-      notFound();
-    }
+import { notFound, redirect } from "next/navigation";
+
+const ProductReviewId = async ({ params }: { params: Promise<{ productId: string; reviewId: string }> }) => {
+  const { productId, reviewId } = await params;
+  if (parseInt(reviewId) > 1000) {
+    // notFound();
+    redirect("/products");
+  }
   return (
-    <div>Review for {productId} with review {reviewId}</div>
-  )
-}
+    <div>
+      Review for {productId} with review {reviewId}
+    </div>
+  );
+};
 
-export default ProductReviewId
+export default ProductReviewId;
