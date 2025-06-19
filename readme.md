@@ -356,3 +356,78 @@ export default NavLinks;
 
 - Styling can be adapted to match your CSS framework (Tailwind, CSS modules, etc.).
 
+<details>
+<summary><strong>📁 Params and Search Params</strong></summary>
+
+## 🔍 What Are `params` and `searchParams`?
+
+Given a URL, Next.js gives us access to:
+
+- **`params`** → dynamic segments in the route (e.g. `/product/[id]`)
+- **`searchParams`** → query strings in the URL (e.g. `/product?id=123&page=2`)
+
+---
+
+## 📂 In Server Components
+
+You can directly access both `params` and `searchParams` in **server components** (like `page.tsx`) using `async`/`await`.
+
+### ✅ Example: In `page.tsx`
+
+```tsx
+export default async function Page({ params, searchParams }: { params: any, searchParams: any }) {
+  const id = params.id;
+  const page = searchParams.page;
+
+  return <div>Product ID: {id} - Page: {page}</div>;
+}
+```
+
+>✅ Server components support async/await — you can use both params and searchParams directly.
+
+## ⚛️ In Client Components
+Client components do not support async/await at the component level, so you need to use React hooks like:
+
+- useParams() – from custom or third-party hooks
+
+- useSearchParams() – from next/navigation
+
+### ⚠️ Hook-based access in "use client" components
+```tsx
+'use client';
+
+import { useParams, useSearchParams } from 'next/navigation';
+
+export default function ClientComponent() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const id = params.id;
+  const page = searchParams.get('page');
+
+  return <div>Product ID: {id} - Page: {page}</div>;
+}
+
+```
+
+### ⚠️ Layout Limitation: No searchParams in layout.tsx
+
+>❗ layout.tsx files have access to params, but not to searchParams.
+
+❗ Why?
+1. Layouts are structural and static
+Layouts are meant for shared UI like headers, sidebars, footers — not dynamic data. They are rendered once and cached, so Next.js avoids passing volatile data like query strings to them.
+
+2. **searchParams** are request-based, not route-based
+
+    - **params** come from route segments like [id]
+
+    - **searchParams** come from the URL query string like ?page=2
+
+    - Since layouts don’t re-render on query changes, they can’t reliably access searchParams.
+
+3. Performance & caching reasons
+
+    - Layouts are heavily cached for speed.
+
+    - Allowing searchParams would break reusability and caching optimizations.
+
