@@ -1206,3 +1206,12 @@ export default function DefaultUsersView() {
 
 >💡 Use `default.tsx` in each slot to ensure consistent rendering and prevent 404s on deep URLs or refresh.
 </details>
+
+<details>
+<summary><strong>📁 Conditional Routes in Parallel Routing</strong></summary>
+Imagine you want to show different content based on whether a user is logged in or not
+
+You might want to display a dashboard for authenticated users but show a login page for those who aren't
+
+Conditional Routes allows us to achieve this while maintaining completely seperate code on the same URL
+</details>
