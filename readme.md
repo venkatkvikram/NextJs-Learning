@@ -798,3 +798,81 @@ app/
 
 > 💡 For global error handling, use app/global-error.tsx (optional fallback for unhandled cases).
 </details>
+
+<details>
+<summary><strong>📁 Recovering From Errors (Error Handling - Part II)</strong></summary>
+
+## 🔁 Recovering from Errors in `error.tsx`
+
+Next.js error boundaries (`error.tsx`) provide a powerful way to **gracefully handle rendering errors** in route segments.  
+One useful prop passed to this component is the **`reset()`** function.
+
+---
+
+## 🧪 Basic Recovery with `reset()`
+
+```tsx
+'use client';
+
+const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) => {
+  return (
+    <div>
+      <p>{error.message}</p>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
+  );
+};
+
+export default ErrorBoundary;
+```
+
+- The reset() function allows the component tree to re-render and re-attempt the logic that previously failed.
+
+- However, if the error is on the server, clicking "Try Again" will keep showing the same error.
+
+## 🧠 Why Doesn't reset() Always Work?
+- `reset()` works only for client-side errors or transient UI glitches.
+
+- For server-side rendering errors, the component still fails unless we refresh the route or reload the server-side context.
+
+```tsx
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { startTransition } from 'react';
+
+const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) => {
+  const router = useRouter();
+
+  const reload = () => {
+    startTransition(() => {
+      router.refresh(); // revalidate the server component
+      reset();           // re-attempt rendering
+    });
+  };
+
+  return (
+    <div>
+      <p>{error.message}</p>
+      <button onClick={reload}>Try again</button>
+    </div>
+  );
+};
+
+export default ErrorBoundary;
+```
+
+### ✅ Why Use startTransition()?
+- Defers the route refresh until the next render phase
+
+- Ensures smoother experience while React handles any pending state updates
+
+- Prevents UI from freezing or glitching during retries
+
+| Technique           | Works For          | What It Does                           |
+| ------------------- | ------------------ | -------------------------------------- |
+| `reset()`           | Client-only errors | Re-renders component tree              |
+| `router.refresh()`  | Server errors      | Refetches and revalidates server logic |
+| `startTransition()` | UI performance     | Defers updates for smoother retry UX   |
+>💡 For full error resilience, combine both reset() and router.refresh() inside a transition.
+</details>
