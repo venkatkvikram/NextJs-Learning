@@ -797,3 +797,4 @@ app/
 | Works with nested routing  | ✅ Yes    |
 
 > 💡 For global error handling, use app/global-error.tsx (optional fallback for unhandled cases).
+</details>
