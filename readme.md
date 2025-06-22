@@ -1125,3 +1125,84 @@ Each slot can behave like a mini-app:
 >💡 Parallel routing + slots = super flexible and performant UI composition in Next.js.
 
 </details>
+
+<details>
+<summary><strong>📁 Handling Unmatched Routes in Parallel Routing</strong></summary>
+
+## 🚧 What Are Unmatched Slots?
+
+In a parallel routing setup (using `@slots`), each slot renders content **based on the current URL**. But when a slot **doesn’t match** the URL, it becomes an **unmatched slot**.
+
+---
+
+## 📁 Scenario: Complex Dashboard with 4 Slots
+
+Let's say we have a parallel layout at `/complex-dashboard` with these slots:
+
+- `@children` → Main view  
+- `@users` → User Analytics  
+- `@revenue` → Revenue Metrics  
+- `@notifications` → Notifications  
+
+```bash
+app/
+└── complex-dashboard/
+    ├── layout.tsx
+    ├── @users/
+    ├── @revenue/
+    ├── @notifications/
+    └── page.tsx (children slot)
+```
+## 🧭 Route Behavior
+### ✅ Navigating to /complex-dashboard
+All slots are matched and display:
+
+- Main view (children)
+
+- Users panel
+
+- Revenue panel
+
+- Notifications panel
+
+## ❗ Navigating to /complex-dashboard/archived
+Suppose only the @notifications slot has content for /archived. The others (@users, @revenue, children) are now unmatched.
+
+| Action            | Behavior                                                                 |
+| ----------------- | ------------------------------------------------------------------------ |
+| Client navigation | ✅ Next.js **keeps showing** previously loaded content in unmatched slots |
+| Hard refresh (F5) | ❌ Unmatched slots will **look for `default.tsx`** as fallback            |
+| No default.tsx    | 🚫 Next.js throws a **404 error**                                        |
+## 🧩 Solution: default.tsx for Unmatched Slots
+To handle unmatched slots gracefully, add a `default.tsx` file inside any `@slot`
+
+```tsx
+app/
+└── complex-dashboard/
+    └── @users/
+        ├── default.tsx
+```
+
+### Example: `@users/default.tsx`
+```tsx
+export default function DefaultUsersView() {
+  return <p>No user data to display for this route.</p>;
+}
+
+```
+
+- This renders as a fallback when the slot doesn't match the current URL
+
+- It avoids unexpected 404s and improves UX
+
+## ✅ Summary
+
+| Behavior                       | Description                                                        |
+| ------------------------------ | ------------------------------------------------------------------ |
+| Unmatched slots on navigation  | Keep showing previously rendered content (good for UX)             |
+| Unmatched slots on page reload | Look for `default.tsx` in each slot                                |
+| No `default.tsx` present       | Results in a 404 error for that slot                               |
+| Purpose of `default.tsx`       | Acts as a **graceful fallback** UI when no route matches in a slot |
+
+>💡 Use `default.tsx` in each slot to ensure consistent rendering and prevent 404s on deep URLs or refresh.
+</details>
