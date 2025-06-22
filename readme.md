@@ -876,3 +876,68 @@ export default ErrorBoundary;
 | `startTransition()` | UI performance     | Defers updates for smoother retry UX   |
 >💡 For full error resilience, combine both reset() and router.refresh() inside a transition.
 </details>
+
+
+<details>
+<summary><strong>📁 Handling Errors in Nested Routes (Error Handling - Part III)</strong></summary>
+
+## 🧱 How Do Nested Error Boundaries Work?
+
+When an error occurs in a route segment, **Next.js will bubble the error up** to the **nearest `error.tsx` file** in the route hierarchy — just like how React error boundaries work.
+
+---
+
+## 🔍 Key Concepts
+
+- An `error.tsx` handles errors **for its own folder AND all nested child segments**.
+- Errors "bubble up" to the nearest available `error.tsx` file.
+- This allows you to **control the scope of error handling** by placing `error.tsx` files at different folder levels.
+
+---
+
+## 📁 Example Scenario
+
+Assume we have the following structure:
+
+```bash
+app/
+└── products/
+    ├── page.tsx
+    ├── error.tsx        ← catches errors in all nested segments
+    └── [productId]/
+        ├── page.tsx
+        └── reviewId/
+            ├── page.tsx
+            └── error.tsx (optional override)
+```
+## Case 1: error.tsx inside reviewId/
+Catches errors only in the reviewId segment.
+
+Other parts of products remain unaffected.
+
+## Case 2: error.tsx moved to products/
+Now handles errors for:
+
+`/products`
+
+`/products/[productId]`
+
+`/products/[productId]/reviewId`
+
+Any error from children bubbles up to this `error.tsx`.
+
+##  Why Does Placement Matter?
+"Where you place your error.tsx determines how localized or global your error handling is."
+
+| Location              | Error Scope                                    |
+| --------------------- | ---------------------------------------------- |
+| `reviewId/error.tsx`  | Only errors inside `reviewId/`                 |
+| `productId/error.tsx` | Catches errors in productId and its children   |
+| `products/error.tsx`  | Handles errors across the entire products tree |
+### ✅ Best Practices
+- Use deep-level error.tsx when you want granular, component-specific fallback UIs
+
+- Use higher-level error.tsx when you want centralized error handling (e.g., show a full-page error for product-related failures)
+
+- You can combine both! A deep-level error.tsx will override the parent's behavior.
+</details>
