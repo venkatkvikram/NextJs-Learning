@@ -725,7 +725,7 @@ export default function Loading() {
 </details>
 
 <details>
-<summary><strong>📁 Error Handling (Errors Part - I)</strong></summary>
+<summary><strong>📁 Error Handling (Error Handling - Part I)</strong></summary>
 
 ## ❌ What is `error.tsx`?
 
@@ -940,4 +940,88 @@ Any error from children bubbles up to this `error.tsx`.
 - Use higher-level error.tsx when you want centralized error handling (e.g., show a full-page error for product-related failures)
 
 - You can combine both! A deep-level error.tsx will override the parent's behavior.
+</details>
+<details><summary><strong>
+📁 Handling Errors in Layouts (Error Handling - Part IV)</strong></summary>
+
+The error boundary wont catch errors thrown in `layout.tsx` within the same segement because of how component hierarchy works.
+ 
+The layout actually sits above the error boundary in a component tree
+
+![Error Handling in Layout](./hello-world\public\png\ErrorHandling\ComponentHierarchy.png)
+</details>
+
+<details>
+<summary><strong>📁 Handling Global Errors (Error Handling - Part V)</strong></summary>
+
+## 🌐 What is `global-error.tsx`?
+
+Next.js provides a **special file** named `global-error.tsx` to catch **top-level application errors** — it's the **last line of defense** when everything else fails.
+
+Place this file in your app root:
+
+```bash
+app/
+└── global-error.tsx
+```
+
+| Property        | Behavior                                       |
+| --------------- | ---------------------------------------------- |
+| Location        | Root `app/` directory                          |
+| Scope           | Catches uncaught top-level errors              |
+| Works in        | ✅ Production only (`next build && next start`) |
+| Dev behavior    | ❌ Shows Next.js overlay error instead          |
+| HTML structure  | ✅ Requires its own `<html>` and `<body>` tags  |
+| Replaces layout | ✅ Fully replaces the root layout               |
+
+
+## ⚛️ Why Include `<html>` and `<body>`?
+When `global-error.tsx` is triggered, it completely replaces the layout, not just the page content. So:
+
+You must return a full HTML document
+
+Include `<html>` and `<body>` tags (like in `layout.tsx`)
+
+
+## ✅ Example: `global-error.tsx`
+```tsx
+"use client"; // Error boundaries must be Client Components
+
+import "./globals.css";
+
+export default function GlobalError() {
+  return (
+    <html lang="en">
+      <body>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <h2 className="text-2xl font-bold mb-4">Something went wrong!</h2>
+          <button
+            onClick={() => {
+              // refresh the page
+              window.location.reload();
+            }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Refresh
+          </button>
+        </div>
+      </body>
+    </html>
+  );
+}
+```
+>🔁 reset() can attempt to recover the app state — though often not useful at global level.
+
+## 🛠 Dev Mode Behavior
+In development mode, you’ll still see the Next.js error overlay instead of your global-error.tsx file.
+
+This is intentional to help developers debug errors faster during development.
+
+| Feature                    | Supported |
+| -------------------------- | --------- |
+| Handles top-level crashes  | ✅ Yes     |
+| Requires HTML/Body tags    | ✅ Yes     |
+| Renders in production only | ✅ Yes     |
+| Replaces root layout       | ✅ Yes     |
+>💡 global-error.tsx ensures your app fails gracefully in production when all other boundaries are bypassed.
 </details>
