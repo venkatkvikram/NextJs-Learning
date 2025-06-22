@@ -530,3 +530,136 @@ export default ProductReviewId;
 - Use notFound() for conditionally throwing a 404 in server logic
 
 </details>
+
+
+<details>
+<summary><strong>📁 Templates</strong></summary>
+
+## 🧩 What Are Templates in Next.js?
+
+Templates in Next.js are similar to layouts, but with a **key difference** — they **remount** on navigation, giving you a fresh state and re-rendered DOM for every page.
+
+---
+
+## 🧠 Why Use Templates?
+
+Let’s consider a scenario in your `(auth)` route group:
+
+📁 `hello-world/src/app/(auth)/layout.tsx`
+
+```tsx
+'use client';
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+
+const navLinks = [
+  { name: "Register", href: "/register" },
+  { name: "Login", href: "/login" },
+  { name: "Forgot Password", href: "/forgot-password" },
+];
+
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [input, setInput] = useState("");
+  const pathName = usePathname();
+
+  return (
+    <div>
+      <div>
+        <input value={input} onChange={(e) => setInput(e.target.value)} />
+      </div>
+      {navLinks.map((link) => {
+        const isActive = pathName === link.href || (pathName.startsWith(link.href) && link.href !== "/");
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={isActive ? "font-bold mr-4" : "text-red-500 mr-4"}
+          >
+            {link.name}
+          </Link>
+        );
+      })}
+      {children}
+    </div>
+  );
+}
+```
+## 🧪 Scenario
+When you enter something into the input box and navigate from **/register** to **/login**, the input retains its value.
+
+>This is because layouts do not re-render or remount on navigation — only the page component inside them changes.
+
+## 🔁 When You Need a Fresh Instance
+If you want to reset the input or remount the shared UI, a layout.tsx won’t help.
+This is where templates come in.
+
+# 📄 What Are Templates?
+Templates are like layouts but remount on each route navigation.
+
+Every route sharing a template gets a fresh start:
+
+  - 🧼 DOM is recreated
+
+  - 💥 State is cleared
+
+  - 🔁 Effects are re-run (useEffects)
+
+ ###  How to Use
+
+
+To use a template:
+
+1. Replace `layout.tsx` with `template.tsx`
+
+2. Export a component that accepts children prop
+
+```tsx
+export default function Template({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <h1>Shared Auth Template</h1>
+      {children}
+    </div>
+  );
+}
+```
+>✅ Now when you navigate between /register, /login, etc., your template (and its input state) resets each time.
+
+## 🧩 Can You Use Layouts and Templates Together?
+Yes! Layouts and templates can be used together.
+Here's how it works:
+
+1. The `layout.tsx` renders once
+
+2. The `template.tsx` renders on every route change
+
+3. The layout wraps the template, and the template wraps the page
+
+### 🖼 Visual Explanation
+📷 Layouts + Templates — structure:
+
+> Note : You can actually use layout.tsx and template.tsx files together.
+
+![How Templates with Layouts Work](./hello-world/public/png/Templates/Layouts&Templates.png)
+
+ >In this case the layout renders first and it's children are replacedby template components ouput.(Picture below)
+
+![How Templates with Layouts Work](./hello-world/public/png/Templates/Layouts&Templates2.png)
+
+| Feature                 | Layouts              | Templates               |
+| ----------------------- | -------------------- | ----------------------- |
+| Rerender on navigation  | ❌ No                 | ✅ Yes                   |
+| Retains component state | ✅ Yes                | ❌ No (fresh start)      |
+| Best used for           | Persistent shared UI | Shared UI needing reset |
+| Caching behavior        | Aggressively cached  | Remounted fresh         |
+
+
+>💡 Use layouts for structural components like headers/footers.
+Use templates when you need per-page state reset with shared structure.
+</details>
