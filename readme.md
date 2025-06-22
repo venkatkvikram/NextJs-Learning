@@ -663,3 +663,62 @@ Here's how it works:
 >💡 Use layouts for structural components like headers/footers.
 Use templates when you need per-page state reset with shared structure.
 </details>
+
+<details>
+<summary><strong>📁 Loading UI (`loading.tsx`)</strong></summary>
+
+## ⏳ What is `loading.tsx`?
+
+Next.js provides a special file called **`loading.tsx`** to create **loading states** while a route segment is being fetched or rendered.
+
+---
+
+## 🧠 How It Works
+
+- When navigating between routes, if a page or component takes time to load (due to fetching data or rendering server components), Next.js automatically shows `loading.tsx`.
+- The file is colocated next to the `page.tsx` for the route.
+- **Next.js automatically wraps your `page.tsx` and its children in a React Suspense boundary.**
+
+---
+
+## 🧩 File Placement
+
+To use it, simply create a `loading.tsx` inside any route segment folder (like `/dashboard`, `/products`, etc.):
+
+```bash
+app/
+└── dashboard/
+    ├── page.tsx
+    └── loading.tsx
+  
+
+```
+## ✅ Example: loading.tsx
+```tsx
+
+export default function Loading() {
+  return <p>Loading dashboard...</p>;
+}
+```
+>This UI will appear automatically while the dashboard route is loading.
+
+### 🎯 Benefits
+- Provides better UX during route transitions
+
+- Works seamlessly with server components and streaming
+
+- Improves perceived performance of your app
+
+| Feature                  | Supported |
+| ------------------------ | --------- |
+| Route-specific loading   | ✅ Yes     |
+| Auto-wrapped in Suspense | ✅ Yes     |
+| Supports nested routes   | ✅ Yes     |
+>💡 You can create loading.tsx at any route level to handle nested loading states.
+
+
+
+
+
+
+
