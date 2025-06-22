@@ -1025,3 +1025,103 @@ This is intentional to help developers debug errors faster during development.
 | Replaces root layout       | ✅ Yes     |
 >💡 global-error.tsx ensures your app fails gracefully in production when all other boundaries are bypassed.
 </details>
+
+
+<details>
+<summary><strong>📁 Parallel Routes in Next.js</strong></summary>
+
+## 🔄 What Are Parallel Routes?
+
+**Parallel routes** let you render **multiple pages simultaneously** within the same layout.  
+They are especially useful for **dashboards** or **multi-pane UIs**, where different sections need to be independently rendered.
+
+---
+
+## 🧠 Concept: Slots
+
+Parallel routes are powered by a feature called **`slots`**.
+
+- A **slot** is a route segment prefixed with `@`
+- Each slot becomes a **prop** in the corresponding `layout.tsx` file
+- They help modularize complex layouts without affecting the URL
+
+---
+
+## 📁 Scenario: Complex Dashboard
+
+Imagine you're building a dashboard that displays:
+
+1. 📊 User Analytics  
+2. 💰 Revenue Metrics  
+3. 🔔 Notifications
+
+With **parallel routing**, you can create:
+
+```bash
+app/
+└── dashboard/
+    ├── layout.tsx
+    ├── @user/          ← Slot for analytics
+    ├── @revenue/       ← Slot for revenue
+    └── @notifications/ ← Slot for notifications
+```
+>Each @slot will render in a different region of the layout.tsx using props like user, revenue, notifications.
+
+### Folder Structure
+![Complex dashboard folder with slots](./hello-world\public\png\ParallelRoutes\Slots.png)
+
+### 💡 Key Notes
+- Slots are not part of the URL
+
+- The default children prop is also a slot (but doesn't need its own folder)
+
+- Slots make layouts modular and composable
+## ✨ Benefits of Parallel Routes
+
+| Feature                    | Benefit                                               |
+| -------------------------- | ----------------------------------------------------- |
+| Modular Layout             | Separate concerns into dedicated route segments       |
+| Independent Route Handling | Each slot can have its own `loading.tsx`, `error.tsx` |
+| Better Performance         | Lazy loading of sections based on user interaction    |
+| Sub-navigation Support     | Each slot can have its own navigation and UI state    |
+
+## 🧩 Independent Route Handling
+Each slot can define:
+
+- `loading.tsx` for loading states
+
+- `error.tsx` for error boundaries
+
+This gives fine-grained control over how each section behaves.
+
+
+> Each slot in layout can handle it's own loading and error states
+This granular control is particularly useful in scenarios where different sections of the page load at varying speeds or encounter unique errors
+
+### 📷 Example: Separate loading/error handling for slots
+![Independent Route Handling](./hello-world\public\png\ParallelRoutes\IndependentRouteHandling.png)
+
+## 🔀 Sub-navigation Support
+Each slot can behave like a mini-app:
+
+- Have its own routes
+
+- Handle navigation, state, filters independently
+
+- No interference between slots
+
+### 📷 Example: Sub-navigation in slots
+
+
+![Sub Navigation](./hello-world\public\png\ParallelRoutes\SubNavigation.png)
+
+## Summary
+| Concept          | Description                                   |
+| ---------------- | --------------------------------------------- |
+| Slot (`@name`)   | Custom segment rendered as a layout prop      |
+| Parallel Routing | Render multiple routes inside the same layout |
+| URL Structure    | Unaffected (slots are invisible in URLs)      |
+| Use Case         | Dashboards, split views, complex admin panels |
+>💡 Parallel routing + slots = super flexible and performant UI composition in Next.js.
+
+</details>
