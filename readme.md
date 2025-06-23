@@ -1430,3 +1430,6 @@ export default function DefaultModal() {
 | Click photo (in-feed modal) | Intercepted view inside `@modal/(.)[id]`   |
 >💡 Use intercepting routes for seamless UI flows — modals, previews, overlays — without losing page context.
 </details>
+
+
+
