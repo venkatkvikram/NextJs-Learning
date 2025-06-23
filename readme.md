@@ -1349,3 +1349,84 @@ app/
 > ⚠️ Intercepting routes only control presentation, not route logic. Use wisely to balance performance and UX.
 
 </details>
+
+
+<details>
+<summary><strong>📁 Parallel Intercepting Routes (Real Example)</strong></summary>
+
+## 🧭 What Are Intercepting Routes?
+
+Intercepting routes in Next.js 15 let you render a different route **inside a parallel slot**, without fully navigating away from the current page.
+
+Use case: Open content like a **modal**, **drawer**, or **side overlay** while maintaining the context of the current route.
+
+---
+
+## 📸 Example: Photo Feed with Modal Preview
+
+### Folder Structure:
+
+```bash
+photo-feed/
+├── [id]/page.tsx                → Full-page photo view (direct navigation)
+├── @modal/
+│   └── (.)[id]/page.tsx         → Intercepts photo view and renders as modal
+│   └── (.)[id]/default.tsx      → Optional fallback for unmatched state
+├── photos/
+│   ├── 1.jpg
+│   ├── 2.jpg
+│   └── ...
+├── layout.tsx                   → Layout file for modal + feed
+├── page.tsx                     → Main photo feed
+├── styles.css
+└── wonders.ts
+```
+
+### Behavior:
+`/photo-feed` shows a list of images.
+
+- Clicking an image routes to `/photo-feed/[id]`, but instead of full navigation:
+
+- It’s intercepted by `@modal/(.)[id]/page.tsx`
+
+- Renders in a modal over the feed.
+
+- On reload or direct navigation to `/photo-feed/5`, full page renders via `[id]/page.tsx`.
+
+## 🧠 How Does It Work?
+- The folder `(.)[id]` tells Next.js: “Intercept `/photo-feed/[id]` and render inside a slot.”
+
+- The @modal slot allows that to appear in a parallel region of your UI layout.
+
+### Sample Layout `(layout.tsx)`:
+```tsx
+export default function PhotoFeedLayout({ children, modal }: {
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}) {
+  return (
+    <div className="photo-feed-layout">
+      <main>{children}</main>
+      {modal && <div className="modal-container">{modal}</div>}
+    </div>
+  );
+}
+```
+### Fallback for unmatched modal state:
+If a user visits a URL that doesn't match the intercepted route, default.tsx renders as fallback:
+
+```tsx
+// @modal/(.)[id]/default.tsx
+export default function DefaultModal() {
+  return null; // or return <div>No photo selected</div>
+}
+```
+
+## Summary
+| Route                       | Renders                                    |
+| --------------------------- | ------------------------------------------ |
+| `/photo-feed`               | Photo grid feed                            |
+| `/photo-feed/[id]`          | Full page photo view (via `[id]/page.tsx`) |
+| Click photo (in-feed modal) | Intercepted view inside `@modal/(.)[id]`   |
+>💡 Use intercepting routes for seamless UI flows — modals, previews, overlays — without losing page context.
+</details>
