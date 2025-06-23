@@ -797,6 +797,7 @@ app/
 | Works with nested routing  | ✅ Yes    |
 
 > 💡 For global error handling, use app/global-error.tsx (optional fallback for unhandled cases).
+
 </details>
 
 <details>
@@ -812,7 +813,7 @@ One useful prop passed to this component is the **`reset()`** function.
 ## 🧪 Basic Recovery with `reset()`
 
 ```tsx
-'use client';
+"use client";
 
 const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) => {
   return (
@@ -831,15 +832,16 @@ export default ErrorBoundary;
 - However, if the error is on the server, clicking "Try Again" will keep showing the same error.
 
 ## 🧠 Why Doesn't reset() Always Work?
+
 - `reset()` works only for client-side errors or transient UI glitches.
 
 - For server-side rendering errors, the component still fails unless we refresh the route or reload the server-side context.
 
 ```tsx
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { startTransition } from 'react';
+import { useRouter } from "next/navigation";
+import { startTransition } from "react";
 
 const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) => {
   const router = useRouter();
@@ -847,7 +849,7 @@ const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) =>
   const reload = () => {
     startTransition(() => {
       router.refresh(); // revalidate the server component
-      reset();           // re-attempt rendering
+      reset(); // re-attempt rendering
     });
   };
 
@@ -863,6 +865,7 @@ export default ErrorBoundary;
 ```
 
 ### ✅ Why Use startTransition()?
+
 - Defers the route refresh until the next render phase
 
 - Ensures smoother experience while React handles any pending state updates
@@ -874,9 +877,10 @@ export default ErrorBoundary;
 | `reset()`           | Client-only errors | Re-renders component tree              |
 | `router.refresh()`  | Server errors      | Refetches and revalidates server logic |
 | `startTransition()` | UI performance     | Defers updates for smoother retry UX   |
->💡 For full error resilience, combine both reset() and router.refresh() inside a transition.
-</details>
 
+> 💡 For full error resilience, combine both reset() and router.refresh() inside a transition.
+
+</details>
 
 <details>
 <summary><strong>📁 Handling Errors in Nested Routes (Error Handling - Part III)</strong></summary>
@@ -910,12 +914,15 @@ app/
             ├── page.tsx
             └── error.tsx (optional override)
 ```
+
 ## Case 1: error.tsx inside reviewId/
+
 Catches errors only in the reviewId segment.
 
 Other parts of products remain unaffected.
 
 ## Case 2: error.tsx moved to products/
+
 Now handles errors for:
 
 `/products`
@@ -926,7 +933,8 @@ Now handles errors for:
 
 Any error from children bubbles up to this `error.tsx`.
 
-##  Why Does Placement Matter?
+## Why Does Placement Matter?
+
 "Where you place your error.tsx determines how localized or global your error handling is."
 
 | Location              | Error Scope                                    |
@@ -934,7 +942,9 @@ Any error from children bubbles up to this `error.tsx`.
 | `reviewId/error.tsx`  | Only errors inside `reviewId/`                 |
 | `productId/error.tsx` | Catches errors in productId and its children   |
 | `products/error.tsx`  | Handles errors across the entire products tree |
+
 ### ✅ Best Practices
+
 - Use deep-level error.tsx when you want granular, component-specific fallback UIs
 
 - Use higher-level error.tsx when you want centralized error handling (e.g., show a full-page error for product-related failures)
@@ -945,10 +955,11 @@ Any error from children bubbles up to this `error.tsx`.
 📁 Handling Errors in Layouts (Error Handling - Part IV)</strong></summary>
 
 The error boundary wont catch errors thrown in `layout.tsx` within the same segement because of how component hierarchy works.
- 
+
 The layout actually sits above the error boundary in a component tree
 
 ![Error Handling in Layout](./hello-world\public\png\ErrorHandling\ComponentHierarchy.png)
+
 </details>
 
 <details>
@@ -965,25 +976,25 @@ app/
 └── global-error.tsx
 ```
 
-| Property        | Behavior                                       |
-| --------------- | ---------------------------------------------- |
-| Location        | Root `app/` directory                          |
-| Scope           | Catches uncaught top-level errors              |
+| Property        | Behavior                                        |
+| --------------- | ----------------------------------------------- |
+| Location        | Root `app/` directory                           |
+| Scope           | Catches uncaught top-level errors               |
 | Works in        | ✅ Production only (`next build && next start`) |
 | Dev behavior    | ❌ Shows Next.js overlay error instead          |
 | HTML structure  | ✅ Requires its own `<html>` and `<body>` tags  |
 | Replaces layout | ✅ Fully replaces the root layout               |
 
-
 ## ⚛️ Why Include `<html>` and `<body>`?
+
 When `global-error.tsx` is triggered, it completely replaces the layout, not just the page content. So:
 
 You must return a full HTML document
 
 Include `<html>` and `<body>` tags (like in `layout.tsx`)
 
-
 ## ✅ Example: `global-error.tsx`
+
 ```tsx
 "use client"; // Error boundaries must be Client Components
 
@@ -1010,22 +1021,25 @@ export default function GlobalError() {
   );
 }
 ```
->🔁 reset() can attempt to recover the app state — though often not useful at global level.
+
+> 🔁 reset() can attempt to recover the app state — though often not useful at global level.
 
 ## 🛠 Dev Mode Behavior
+
 In development mode, you’ll still see the Next.js error overlay instead of your global-error.tsx file.
 
 This is intentional to help developers debug errors faster during development.
 
 | Feature                    | Supported |
 | -------------------------- | --------- |
-| Handles top-level crashes  | ✅ Yes     |
-| Requires HTML/Body tags    | ✅ Yes     |
-| Renders in production only | ✅ Yes     |
-| Replaces root layout       | ✅ Yes     |
->💡 global-error.tsx ensures your app fails gracefully in production when all other boundaries are bypassed.
-</details>
+| Handles top-level crashes  | ✅ Yes    |
+| Requires HTML/Body tags    | ✅ Yes    |
+| Renders in production only | ✅ Yes    |
+| Replaces root layout       | ✅ Yes    |
 
+> 💡 global-error.tsx ensures your app fails gracefully in production when all other boundaries are bypassed.
+
+</details>
 
 <details>
 <summary><strong>📁 Parallel Routes in Next.js</strong></summary>
@@ -1051,8 +1065,8 @@ Parallel routes are powered by a feature called **`slots`**.
 
 Imagine you're building a dashboard that displays:
 
-1. 📊 User Analytics  
-2. 💰 Revenue Metrics  
+1. 📊 User Analytics
+2. 💰 Revenue Metrics
 3. 🔔 Notifications
 
 With **parallel routing**, you can create:
@@ -1065,17 +1079,21 @@ app/
     ├── @revenue/       ← Slot for revenue
     └── @notifications/ ← Slot for notifications
 ```
->Each @slot will render in a different region of the layout.tsx using props like user, revenue, notifications.
+
+> Each @slot will render in a different region of the layout.tsx using props like user, revenue, notifications.
 
 ### Folder Structure
+
 ![Complex dashboard folder with slots](./hello-world\public\png\ParallelRoutes\Slots.png)
 
 ### 💡 Key Notes
+
 - Slots are not part of the URL
 
 - The default children prop is also a slot (but doesn't need its own folder)
 
 - Slots make layouts modular and composable
+
 ## ✨ Benefits of Parallel Routes
 
 | Feature                    | Benefit                                               |
@@ -1086,6 +1104,7 @@ app/
 | Sub-navigation Support     | Each slot can have its own navigation and UI state    |
 
 ## 🧩 Independent Route Handling
+
 Each slot can define:
 
 - `loading.tsx` for loading states
@@ -1094,14 +1113,15 @@ Each slot can define:
 
 This gives fine-grained control over how each section behaves.
 
-
 > Each slot in layout can handle it's own loading and error states
-This granular control is particularly useful in scenarios where different sections of the page load at varying speeds or encounter unique errors
+> This granular control is particularly useful in scenarios where different sections of the page load at varying speeds or encounter unique errors
 
 ### 📷 Example: Separate loading/error handling for slots
+
 ![Independent Route Handling](./hello-world\public\png\ParallelRoutes\IndependentRouteHandling.png)
 
 ## 🔀 Sub-navigation Support
+
 Each slot can behave like a mini-app:
 
 - Have its own routes
@@ -1112,17 +1132,18 @@ Each slot can behave like a mini-app:
 
 ### 📷 Example: Sub-navigation in slots
 
-
 ![Sub Navigation](./hello-world\public\png\ParallelRoutes\SubNavigation.png)
 
 ## Summary
+
 | Concept          | Description                                   |
 | ---------------- | --------------------------------------------- |
 | Slot (`@name`)   | Custom segment rendered as a layout prop      |
 | Parallel Routing | Render multiple routes inside the same layout |
 | URL Structure    | Unaffected (slots are invisible in URLs)      |
 | Use Case         | Dashboards, split views, complex admin panels |
->💡 Parallel routing + slots = super flexible and performant UI composition in Next.js.
+
+> 💡 Parallel routing + slots = super flexible and performant UI composition in Next.js.
 
 </details>
 
@@ -1139,10 +1160,10 @@ In a parallel routing setup (using `@slots`), each slot renders content **based 
 
 Let's say we have a parallel layout at `/complex-dashboard` with these slots:
 
-- `@children` → Main view  
-- `@users` → User Analytics  
-- `@revenue` → Revenue Metrics  
-- `@notifications` → Notifications  
+- `@children` → Main view
+- `@users` → User Analytics
+- `@revenue` → Revenue Metrics
+- `@notifications` → Notifications
 
 ```bash
 app/
@@ -1153,8 +1174,11 @@ app/
     ├── @notifications/
     └── page.tsx (children slot)
 ```
+
 ## 🧭 Route Behavior
+
 ### ✅ Navigating to /complex-dashboard
+
 All slots are matched and display:
 
 - Main view (children)
@@ -1166,14 +1190,17 @@ All slots are matched and display:
 - Notifications panel
 
 ## ❗ Navigating to /complex-dashboard/archived
+
 Suppose only the @notifications slot has content for /archived. The others (@users, @revenue, children) are now unmatched.
 
-| Action            | Behavior                                                                 |
-| ----------------- | ------------------------------------------------------------------------ |
+| Action            | Behavior                                                                  |
+| ----------------- | ------------------------------------------------------------------------- |
 | Client navigation | ✅ Next.js **keeps showing** previously loaded content in unmatched slots |
 | Hard refresh (F5) | ❌ Unmatched slots will **look for `default.tsx`** as fallback            |
-| No default.tsx    | 🚫 Next.js throws a **404 error**                                        |
+| No default.tsx    | 🚫 Next.js throws a **404 error**                                         |
+
 ## 🧩 Solution: default.tsx for Unmatched Slots
+
 To handle unmatched slots gracefully, add a `default.tsx` file inside any `@slot`
 
 ```tsx
@@ -1184,11 +1211,11 @@ app/
 ```
 
 ### Example: `@users/default.tsx`
+
 ```tsx
 export default function DefaultUsersView() {
   return <p>No user data to display for this route.</p>;
 }
-
 ```
 
 - This renders as a fallback when the slot doesn't match the current URL
@@ -1204,7 +1231,8 @@ export default function DefaultUsersView() {
 | No `default.tsx` present       | Results in a 404 error for that slot                               |
 | Purpose of `default.tsx`       | Acts as a **graceful fallback** UI when no route matches in a slot |
 
->💡 Use `default.tsx` in each slot to ensure consistent rendering and prevent 404s on deep URLs or refresh.
+> 💡 Use `default.tsx` in each slot to ensure consistent rendering and prevent 404s on deep URLs or refresh.
+
 </details>
 
 <details>
@@ -1214,4 +1242,110 @@ Imagine you want to show different content based on whether a user is logged in 
 You might want to display a dashboard for authenticated users but show a login page for those who aren't
 
 Conditional Routes allows us to achieve this while maintaining completely seperate code on the same URL
+
+</details>
+
+<details>
+<summary><strong>📁Intercepting Routes - Advanced Routing Patterns</strong></summary>
+
+## 1️⃣ Parallel Routes (Recap)
+
+Parallel routes allow multiple pages to render **simultaneously** inside the same layout using `@slot` segments.
+
+- Modular layout design
+- Independent error/loading states
+- Sub-navigation per section
+
+📚 Refer to the **Parallel Routes** section above for full details.
+
+---
+
+## 2️⃣ Intercepting Routes
+
+Intercepting Routes let you **load content from another part of the app** **within the current layout** — instead of navigating away. This is extremely useful when showing **modals**, **drawers**, or **in-place previews**.
+
+---
+
+## 💡 Real-World Examples
+
+### 🪪 Modal Login Page
+
+Traditionally, clicking a "Login" button takes you to `/login`. With intercepting routes, you can:
+
+- Update the URL to `/login`
+- Show a login **modal overlay**
+- Stay in the current layout visually
+
+📷 Example:
+
+![Example with login feature](./hello-world/public/png/InterceptingRoutes/examplelogin.png)
+
+---
+
+### 🖼️ Photo Gallery Modal
+
+- View enlarged photo in a modal without leaving the current gallery grid
+- Updates URL to `/photos/123`
+- Keeps the gallery UI in place
+
+📷 Example:
+
+![Example with photo gallery feature](./hello-world/public/png/InterceptingRoutes/example2photogallery.png)
+
+---
+
+## 🛠️ How Intercepting Routes Work
+
+### 🧭 Two Key Concepts:
+
+1. **Source folder** – where you navigate _from_ (ex: `f1`)
+2. **Target folder** – the original destination (ex: `f2`)
+
+Let’s say you have this folder structure:
+
+```bash
+app/
+└── f1/
+    ├── page.tsx        ← source route
+    ├── (.)f2/          ← intercepting route (targets f2)
+    │   └── page.tsx    ← renders f2 inside f1 layout
+└── f2/
+    └── page.tsx        ← target route
+
+```
+
+> When navigating from f1 to f2, the app intercepts and loads f2's content within the f1 layout instead of a full-page transition.
+
+## 🔢 Naming Conventions for Intercepting Routes
+
+| Prefix     | Meaning                                         | Use Case                           |
+| ---------- | ----------------------------------------------- | ---------------------------------- |
+| `(.)`      | Intercept a route at the **same level**         | `f1/(.)f2` to intercept `f2`       |
+| `(..)`     | Intercept a route **one level above**           | Nested segments                    |
+| `(..)(..)` | Intercept **two levels above**                  | Deep nested routing                |
+| `(...)`    | Intercept route from the **root app directory** | Full application-wide interception |
+
+> 💡 Use these folder names inside your source segment to pull in and intercept content from elsewhere.
+
+## ✅ Benefits
+
+- Keep users in the same layout/context
+
+- Show modals, previews, side panels without full page navigation
+
+- Update URL without breaking flow
+
+- Granular control over user experience and state
+
+## 📌 Summary
+
+| Feature             | Benefit                                                |
+| ------------------- | ------------------------------------------------------ |
+| Parallel Routes     | Render multiple views simultaneously via `@slots`      |
+| Intercepting Routes | Pull content from other routes without navigating away |
+| Uses Layout?        | ✅ Yes                                                 |
+| Real Use Cases      | Login modals, photo viewers, chat overlays             |
+
+> ⚠️ Intercepting routes only control presentation, not route logic. Use wisely to balance performance and UX.
+
 </details>
