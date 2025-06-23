@@ -1433,3 +1433,96 @@ export default function DefaultModal() {
 
 
 
+<details>
+<summary><strong>📁 Route Handlers in App Router</strong></summary>
+
+## 🌐 What Are Route Handlers?
+
+**Route Handlers** allow you to define **custom request/response logic** in the App Router — similar to building API routes in Express.js or the older Page Router.
+
+Unlike page routes (which return HTML), **route handlers let you return JSON, plain text, or any custom response**.
+
+> 🔒 These run **only on the server**, keeping secrets like tokens and API keys safe.
+
+---
+
+## 🚀 Use Cases
+
+- Build RESTful APIs (CRUD operations)
+- Interact with databases
+- Talk to third-party services
+- Serve non-HTML responses (JSON, files, etc.)
+
+---
+
+## 📁 Folder & File Structure
+
+Route handlers live in the `app` directory just like page routes.
+
+**Basic Example:**
+
+```bash
+app/
+└── hello/
+    └── route.ts
+```
+
+`app/hello/route.ts`
+
+```tsx
+// Handle GET requests to /hello
+export async function GET() {
+  return new Response("Hello World!");
+}
+```
+>When a GET request hits `/hello`, this function runs.
+
+## Supported HTTP methods
+| Method    | Supported? | Notes                     |
+| --------- | ---------- | ------------------------- |
+| `GET`     | ✅ Yes      | Fetch data or serve views |
+| `POST`    | ✅ Yes      | Submit data               |
+| `PUT`     | ✅ Yes      | Replace data              |
+| `PATCH`   | ✅ Yes      | Partially update data     |
+| `DELETE`  | ✅ Yes      | Remove resource           |
+| `HEAD`    | ✅ Yes      | Header info only          |
+| `OPTIONS` | ✅ Yes      | Preflight / method check  |
+| Others    | ❌ No       | Returns 405 automatically |
+
+# ⚠️ Handling Conflicts
+You cannot have a page.tsx and route.ts in the same folder. This causes a conflict.
+
+## Incorrect
+```bash
+app/
+└── profile/
+    ├── page.tsx
+    └── route.ts  ← ❌ Conflict!
+```
+
+## ✅ Solution: Move to `api/` subfolder
+
+```bash
+app/
+└── profile/
+    ├── page.tsx
+    └── api/
+        └── route.ts
+```
+ - Now, `/profile` renders a page.
+
+- `/profile/api` handles custom requests.
+
+## Summary
+
+| Feature              | Description                                          |
+| -------------------- | ---------------------------------------------------- |
+| Server-only          | Sensitive logic stays secure                         |
+| Full HTTP Support    | GET, POST, PUT, PATCH, DELETE, etc.                  |
+| Modular structure    | Nestable like page routes                            |
+| Replace Express APIs | Build REST APIs right inside the app                 |
+| File location        | `app/your-path/route.ts`                             |
+| No page conflict     | Use `/api` subfolders if you need page + route combo |
+>🧠 Route Handlers = Powerful server-side logic inside your frontend project.
+
+</details>
