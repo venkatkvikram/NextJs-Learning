@@ -1350,7 +1350,6 @@ app/
 
 </details>
 
-
 <details>
 <summary><strong>📁 Parallel Intercepting Routes (Real Example)</strong></summary>
 
@@ -1383,6 +1382,7 @@ photo-feed/
 ```
 
 ### Behavior:
+
 `/photo-feed` shows a list of images.
 
 - Clicking an image routes to `/photo-feed/[id]`, but instead of full navigation:
@@ -1394,16 +1394,15 @@ photo-feed/
 - On reload or direct navigation to `/photo-feed/5`, full page renders via `[id]/page.tsx`.
 
 ## 🧠 How Does It Work?
+
 - The folder `(.)[id]` tells Next.js: “Intercept `/photo-feed/[id]` and render inside a slot.”
 
 - The @modal slot allows that to appear in a parallel region of your UI layout.
 
 ### Sample Layout `(layout.tsx)`:
+
 ```tsx
-export default function PhotoFeedLayout({ children, modal }: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+export default function PhotoFeedLayout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
   return (
     <div className="photo-feed-layout">
       <main>{children}</main>
@@ -1412,7 +1411,9 @@ export default function PhotoFeedLayout({ children, modal }: {
   );
 }
 ```
+
 ### Fallback for unmatched modal state:
+
 If a user visits a URL that doesn't match the intercepted route, default.tsx renders as fallback:
 
 ```tsx
@@ -1423,15 +1424,16 @@ export default function DefaultModal() {
 ```
 
 ## Summary
+
 | Route                       | Renders                                    |
 | --------------------------- | ------------------------------------------ |
 | `/photo-feed`               | Photo grid feed                            |
 | `/photo-feed/[id]`          | Full page photo view (via `[id]/page.tsx`) |
 | Click photo (in-feed modal) | Intercepted view inside `@modal/(.)[id]`   |
->💡 Use intercepting routes for seamless UI flows — modals, previews, overlays — without losing page context.
+
+> 💡 Use intercepting routes for seamless UI flows — modals, previews, overlays — without losing page context.
+
 </details>
-
-
 
 <details>
 <summary><strong>📁 Route Handlers in App Router</strong></summary>
@@ -1475,24 +1477,28 @@ export async function GET() {
   return new Response("Hello World!");
 }
 ```
->When a GET request hits `/hello`, this function runs.
+
+> When a GET request hits `/hello`, this function runs.
 
 ## Supported HTTP methods
+
 | Method    | Supported? | Notes                     |
 | --------- | ---------- | ------------------------- |
-| `GET`     | ✅ Yes      | Fetch data or serve views |
-| `POST`    | ✅ Yes      | Submit data               |
-| `PUT`     | ✅ Yes      | Replace data              |
-| `PATCH`   | ✅ Yes      | Partially update data     |
-| `DELETE`  | ✅ Yes      | Remove resource           |
-| `HEAD`    | ✅ Yes      | Header info only          |
-| `OPTIONS` | ✅ Yes      | Preflight / method check  |
-| Others    | ❌ No       | Returns 405 automatically |
+| `GET`     | ✅ Yes     | Fetch data or serve views |
+| `POST`    | ✅ Yes     | Submit data               |
+| `PUT`     | ✅ Yes     | Replace data              |
+| `PATCH`   | ✅ Yes     | Partially update data     |
+| `DELETE`  | ✅ Yes     | Remove resource           |
+| `HEAD`    | ✅ Yes     | Header info only          |
+| `OPTIONS` | ✅ Yes     | Preflight / method check  |
+| Others    | ❌ No      | Returns 405 automatically |
 
 # ⚠️ Handling Conflicts
+
 You cannot have a page.tsx and route.ts in the same folder. This causes a conflict.
 
 ## Incorrect
+
 ```bash
 app/
 └── profile/
@@ -1509,7 +1515,8 @@ app/
     └── api/
         └── route.ts
 ```
- - Now, `/profile` renders a page.
+
+- Now, `/profile` renders a page.
 
 - `/profile/api` handles custom requests.
 
@@ -1523,16 +1530,17 @@ app/
 | Replace Express APIs | Build REST APIs right inside the app                 |
 | File location        | `app/your-path/route.ts`                             |
 | No page conflict     | Use `/api` subfolders if you need page + route combo |
->🧠 Route Handlers = Powerful server-side logic inside your frontend project.
+
+> 🧠 Route Handlers = Powerful server-side logic inside your frontend project.
 
 </details>
 
+<details>
+<summary><strong>📁GET,POST Route Handlers</strong></summary>
 
 ### GET
 
-
 create comments folder under which route.ts where
-
 
 ```tsx
 import { comments } from "./data"; //dummy data
@@ -1544,8 +1552,7 @@ export async function GET() {
 
 now test the the end point GET localhost:3000/comments and you'll see comments as the repsonse
 
-
-### POST 
+### POST
 
 ```tsx
 export async function POST(request: Request) {
@@ -1562,8 +1569,10 @@ export async function POST(request: Request) {
 }
 ```
 
+</details>
+
 <details>
-<summary><strong>📁 Dynamic Route Handlers</strong></summary>
+<summary><strong>📁 Dynamic Route Handlers(PATCH,DELETE)</strong></summary>
 
 ## 🧭 What Are Dynamic Route Handlers?
 
@@ -1589,6 +1598,7 @@ app/
 ```ts
 (request: Request, context: { params: Promise<{ id: string }> })
 ```
+
 `request`: Standard Request object (like fetch)
 
 `params`: Route parameters like { id } — must be awaited
@@ -1625,6 +1635,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 ```
 
 ## 🧠 Things to Remember
+
 | Concept    | Notes                                                          |
 | ---------- | -------------------------------------------------------------- |
 | File Name  | Must be `route.ts` or `route.js` inside `[id]` folder          |
@@ -1633,15 +1644,13 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 | Security   | Handlers run server-side only — no exposure of sensitive logic |
 
 ## ✅ Summary
+
 | Method | Path            | Description                     |
 | ------ | --------------- | ------------------------------- |
 | GET    | `/comments/:id` | Get a comment by ID             |
 | PATCH  | `/comments/:id` | Edit a comment (partial update) |
 | DELETE | `/comments/:id` | Delete a comment by ID          |
 
->🧠 Dynamic route handlers = scalable and RESTful server-side logic inside `app` directory.
+> 🧠 Dynamic route handlers = scalable and RESTful server-side logic inside `app` directory.
+
 </details>
-
-
-
-
