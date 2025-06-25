@@ -1801,3 +1801,75 @@ export async function GET() {
 | Headers are server-only | Yes — secure from browser access  |
 >📘 Headers power content negotiation, security, and behavior across HTTP. They're essential for advanced backend logic.
 </details>
+
+<details>
+<summary><strong>🍪 Cookies in Route Handlers</strong></summary>
+
+## 🍪 What Are Cookies?
+
+Cookies are **small pieces of data** stored on the client-side and sent with every request to the same server.
+
+They serve 3 main purposes:
+
+- **Session Management**: user authentication, shopping carts, etc.
+- **Personalization**: themes, language preferences, etc.
+- **Tracking**: user behavior analytics, clickstreams, etc.
+
+---
+
+## 🧪 Setting Cookies in Route Handlers
+
+You can set cookies by returning a `Response` with a `Set-Cookie` header:
+
+```tsx
+export async function GET() {
+  return new Response("<h1>Profile API data</h1>", {
+    headers: {
+      "Content-Type": "text/html",
+      "Set-Cookie": "theme=dark",
+    },
+  });
+}
+```
+>⚠️ This sets the cookie theme=dark in the browser.
+
+# 📖 Reading Cookies
+## You have two ways to access cookies in App Router:
+### 1️⃣ From `request.cookies` (Request Parameter)
+```tsx
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const theme = request.cookies.get("theme");
+  console.log(theme); // { name: 'theme', value: 'dark' }
+  return new Response("Cookie read successfully");
+}
+```
+
+### 2️⃣ Using `cookies()` Helper Function
+
+```tsx
+import { cookies } from "next/headers";
+
+export async function GET() {
+  const cookieStore = cookies();
+
+  // Set a new cookie
+  cookieStore.set("resultsPerPage", "20");
+
+  // Read an existing cookie
+  const cookie = cookieStore.get("resultsPerPage");
+  console.log(cookie); // { name: 'resultsPerPage', value: '20' }
+
+  return new Response("Cookie set and read successfully");
+}
+```
+>🧠 cookies() is a built-in function that works on the server and gives read/write access to cookies in route handlers.
+
+## Summary
+| Task                  | Method                                |
+| --------------------- | ------------------------------------- |
+| Read cookie           | `request.cookies.get("key")`          |
+| Read/write cookie     | `cookies().get()` / `cookies().set()` |
+| Set cookie (response) | Use `Set-Cookie` in response header   |
+
