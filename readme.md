@@ -1873,3 +1873,144 @@ export async function GET() {
 | Read/write cookie     | `cookies().get()` / `cookies().set()` |
 | Set cookie (response) | Use `Set-Cookie` in response header   |
 
+>🍪 Cookies help maintain persistent state across requests and power authentication, customization, and analytics.
+</details>
+
+<details>
+<summary><strong>🔀 Redirects in Route Handlers</strong></summary>
+
+## 🔁 Why Redirect?
+
+When upgrading from an older API version (e.g., `/v1`) to a new version (`/v2`) with improved structure or features, it’s a good practice to redirect users of the old endpoint.
+
+This allows:
+
+- Gradual transition of clients to the new structure
+- Backward compatibility during migration
+- Cleanup and deprecation plans for legacy endpoints
+
+---
+
+## 🗂 Folder Structure
+
+```bash
+app/
+└── api/
+    ├── v1/
+    │   └── users/
+    │       └── route.ts  <-- Redirects to v2
+    └── v2/
+        └── users/
+            └── route.ts  <-- Improved data model
+```
+
+## 🔀 v1 → v2 Redirect (Soft Deprecation)
+`/app/api/v1/users/route.ts`
+
+```tsx
+import { redirect } from "next/navigation";
+
+export async function GET() {
+  redirect("/api/v2/users"); // Seamlessly forward to new endpoint
+}
+```
+>✅ Ideal for keeping v1 endpoint functional while encouraging clients to switch.
+
+## 🧠 Why This Works Well
+- The redirect helps avoid code duplication.
+
+- Allows you to monitor usage of the old endpoint (log access, warn users).
+
+- Lets you deprecate cleanly in future.
+
+## 🆕 Version 2 with Improved Structure
+`/app/api/v2/users/route.ts`
+
+```tsx
+type UserV2 = {
+  id: string;
+  email: string;
+  fullName: string;
+  createdAt: string;
+  name: {
+    first: string;
+    last: string;
+    middle?: string;
+  };
+  status: "active" | "inactive" | "suspended";
+  lastLoginAt: string | null;
+  profile: {
+    avatar: string | null;
+    title: string | null;
+    department: string | null;
+  };
+  preferences: {
+    language: string;
+    timezone: string;
+    emailNotifications: boolean;
+  };
+};
+
+export async function GET() {
+  const users: UserV2[] = [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      email: "john@example.com",
+      fullName: "John Smith",
+      createdAt: "2024-01-15T08:30:00Z",
+      name: {
+        first: "John",
+        last: "Smith",
+      },
+      status: "active",
+      lastLoginAt: "2024-03-15T09:20:00Z",
+      profile: {
+        avatar: "https://assets.example.com/avatars/john.jpg",
+        title: "Senior Developer",
+        department: "Engineering",
+      },
+      preferences: {
+        language: "en-US",
+        timezone: "America/New_York",
+        emailNotifications: true,
+      },
+    },
+    {
+      id: "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      email: "jane@example.com",
+      fullName: "Jane Wilson",
+      createdAt: "2024-02-20T14:15:00Z",
+      name: {
+        first: "Jane",
+        last: "Wilson",
+        middle: "Elizabeth",
+      },
+      status: "active",
+      lastLoginAt: "2024-03-14T16:45:00Z",
+      profile: {
+        avatar: null,
+        title: "Product Manager",
+        department: "Product",
+      },
+      preferences: {
+        language: "en-GB",
+        timezone: "Europe/London",
+        emailNotifications: false,
+      },
+    },
+  ];
+
+  return Response.json(users);
+}
+```
+
+## Summary
+| Endpoint        | Behavior                     |
+| --------------- | ---------------------------- |
+| `/api/v1/users` | Redirects to `/api/v2/users` |
+| `/api/v2/users` | Returns structured user data |
+>🔄 Redirection is a clean, scalable way to phase out old endpoints and onboard clients to improved APIs.
+
+</details>
+
+
