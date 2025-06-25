@@ -1715,3 +1715,89 @@ Returns all comments whose text includes `great`.
 >📘 This is especially useful for filtering, pagination, and search functionality on the server.
 
 </details>
+
+<details>
+<summary><strong>📁 Headers in Route Handlers</strong></summary>
+
+## 📡 What Are HTTP Headers?
+
+Headers represent **metadata** for both the **request** and **response**. They're essential for security, content negotiation, and client-server communication.
+
+---
+
+### 🔁 Request Headers (from Client → Server)
+
+| Header         | Purpose                                                                 |
+|----------------|-------------------------------------------------------------------------|
+| `User-Agent`   | Identifies client browser/device                                        |
+| `Accept`       | Tells server what content types the client can handle                  |
+| `Authorization`| Sends credentials or tokens to authenticate the client                 |
+
+---
+
+### 🔁 Response Headers (from Server → Client)
+
+| Header         | Purpose                                                                 |
+|----------------|-------------------------------------------------------------------------|
+| `Content-Type` | Specifies data format returned (`text/html`, `application/json`, etc.) |
+
+---
+
+## 📁 Folder Structure
+
+```bash
+app/
+└── profile/
+    └── api/
+        └── route.ts
+```
+
+## 🧪 Reading Headers in Next.js
+<h1>Next.js (App Router) gives us two ways to read incoming request headers:</h1>
+
+### 1️⃣ Via `request.headers`
+```tsx
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const reqHeaders = new Headers(request.headers);
+  console.log(reqHeaders.get("Authorization"));
+  return new Response("Profile API data");
+}
+```
+### 2️⃣ Via headers() Helper (Read-Only)
+
+```tsx
+import { headers } from "next/headers";
+
+export async function GET() {
+  const headerList = headers(); // auto resolves
+  console.log(headerList.get("Authorization"));
+  return new Response("Profile API data");
+}
+```
+>🔒 Note: Headers from headers() are read-only. You can't mutate them.
+
+### 🧾 Setting Response Headers
+To send custom headers back to the client, pass them into the Response constructor:
+
+```tsx
+export async function GET() {
+  return new Response("Profile API data", {
+    headers: {
+      "Content-Type": "text/html",
+      "X-Custom-Header": "MyHeaderValue",
+    },
+  });
+}
+```
+>⚠️ If you don’t explicitly set the content-type, it defaults to `text/plain`.
+
+## Summary
+| Action                  | Method                            |
+| ----------------------- | --------------------------------- |
+| Read request headers    | `request.headers` or `headers()`  |
+| Set response headers    | `new Response(body, { headers })` |
+| Headers are server-only | Yes — secure from browser access  |
+>📘 Headers power content negotiation, security, and behavior across HTTP. They're essential for advanced backend logic.
+</details>
