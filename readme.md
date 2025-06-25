@@ -1654,3 +1654,64 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 > 🧠 Dynamic route handlers = scalable and RESTful server-side logic inside `app` directory.
 
 </details>
+
+
+<details>
+<summary><strong>📁 URL Query Parameters in Route Handlers</strong></summary>
+
+## 🔍 Accessing Query Parameters in Next.js (App Router)
+
+When building **Route Handlers**, you can access query parameters using the `NextRequest` object.
+
+> Next.js enhances the default `Request` object with additional capabilities via `NextRequest` (from `next/server`).
+
+---
+
+## 🧠 Example: Search Comments by Query
+
+Let's say you want to filter comments based on a `?query=` string in the URL.
+
+---
+
+### 📁 Folder Structure
+
+```bash
+app/
+└── comments/
+    └── route.ts
+```
+
+## `route.ts` Example Using `NextRequest`
+```tsx
+import { NextRequest } from "next/server";
+import { comments } from "./data";
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("query");
+
+  const filteredComments = query
+    ? comments.filter((comment) => comment.text.includes(query))
+    : comments;
+
+  return Response.json(filteredComments);
+}
+```
+
+## Sample Request
+```bash
+GET /comments?query=great
+```
+### Response:
+Returns all comments whose text includes `great`.
+
+## Summary
+| Feature                 | Details                             |
+| ----------------------- | ----------------------------------- |
+| Request type            | `NextRequest` from `next/server`    |
+| Access query parameters | `request.nextUrl.searchParams`      |
+| Works with              | GET, POST, etc. in route handlers   |
+| Server-side only        | Yes (no exposure in client browser) |
+>📘 This is especially useful for filtering, pagination, and search functionality on the server.
+
+</details>
