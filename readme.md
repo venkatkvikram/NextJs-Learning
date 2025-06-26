@@ -2013,7 +2013,9 @@ export async function GET() {
 
 </details>
 
+<details>
+<summary><strong>📁 Caching in Route Handlers</strong></summary>
 
-Caching in Route Handlers
 
-Route handlers are not cached by default but you can opt into caching when using GET method
+
+- Route handlers are not cached by default but you can opt into caching when using GET method
