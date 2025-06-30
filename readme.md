@@ -2228,7 +2228,7 @@ export const config = {
 
 //Routing Section Summary
 
-Route defenition
+Route definition
 Pages and layouts
 Dynamic Routes
 Route groups
