@@ -2105,3 +2105,134 @@ export async function GET() {
 >🔁 Caching in route handlers improves performance and reduces backend load for rarely-changing data.
 
 </details>
+
+
+<details>
+<summary><strong>🛡️ Middleware in Next.js</strong></summary>
+
+## 🔍 What is Middleware?
+
+Middleware in Next.js lets you **intercept and control requests globally**, enabling advanced use cases like:
+
+- Redirects and Rewrites
+- Authentication
+- Header and Cookie manipulation
+- Analytics and Logging
+- Feature Flags
+
+---
+
+## 🚀 Getting Started
+
+Create a `middleware.ts` file in the `src/` directory of your app.
+
+```bash
+src/middleware.ts
+```
+
+## ✅ Redirect Example
+Scenario:
+Redirect users navigating to `/profile` to `/home`.
+
+```tsx
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  return NextResponse.redirect(new URL("/home", request.url));
+}
+
+export const config = {
+  matcher: "/profile", // apply middleware only on this route
+};
+
+```
+
+
+## 🧠 Conditional Redirect Logic
+
+```tsx
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/profile") {
+    return NextResponse.redirect(new URL("/hello", request.url));
+  }
+}
+```
+
+## 🔀 URL Rewrites (vs Redirects)
+- Redirects change the URL in the browser
+
+- Rewrites keep the browser URL unchanged but serve different content
+
+```tsx
+export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/legacy") {
+    return NextResponse.rewrite(new URL("/modern", request.url));
+  }
+}
+```
+
+## 🍪 Setting Cookies in Middleware
+
+```tsx
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+
+  const themePreference = request.cookies.get("theme");
+
+  if (!themePreference) {
+    response.cookies.set("theme", "dark"); // set default theme
+  }
+
+  return response;
+}
+```
+
+## 🧾 Setting Custom Headers
+```tsx
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+
+  response.headers.set("x-custom-header", "my-custom-value");
+
+  return response;
+}
+```
+
+## 🛠 Matcher Configuration
+You can control where middleware applies using the matcher key.
+```tsx
+export const config = {
+  matcher: ["/profile", "/dashboard/:path*"], // multiple routes, dynamic segments
+};
+```
+
+## Summary
+| Feature                       | Supported in Middleware                    |
+| ----------------------------- | ------------------------------------------ |
+| Redirects                     | ✅ Yes                                      |
+| Rewrites                      | ✅ Yes                                      |
+| Cookie manipulation           | ✅ Yes                                      |
+| Header manipulation           | ✅ Yes                                      |
+| Query params access           | ✅ Yes                                      |
+| Body access (e.g., POST body) | ❌ No (Middleware only handles headers/URL) |
+
+>🧩 Middleware gives you global control over request behavior with zero client-side code.
+
+</details>
+
+
+
+//Routing Section Summary
+
+Route defenition
+Pages and layouts
+Dynamic Routes
+Route groups
+Linking and Navigation
+Loading and Error states
+Parallel and intercepting routes
+Route handlers and middleware
