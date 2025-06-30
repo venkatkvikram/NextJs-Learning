@@ -2013,7 +2013,95 @@ export async function GET() {
 
 </details>
 
+<details>
+<summary><strong>⚡ Caching in Route Handlers</strong></summary>
 
-Caching in Route Handlers
+## 💡 Default Behavior
 
-Route handlers are not cached by default but you can opt into caching when using GET method
+Route Handlers in Next.js are **not cached by default**, meaning every request is processed fresh — useful for dynamic data but inefficient for rarely-changing data (like categories, static content, etc.).
+
+---
+
+## 🛠 Example Without Caching
+
+```tsx
+// app/api/categories/route.ts
+
+export async function GET() {
+  const categories = [
+    { id: 1, name: "Electronics" },
+    { id: 2, name: "Books" },
+    { id: 3, name: "Fashion" },
+    { id: 4, name: "Home & Garden" },
+  ];
+
+  return Response.json(categories);
+}
+```
+>This endpoint will be executed on every request, even if the data hasn't changed.
+
+## ✅ Enable Static Caching
+You can opt into static caching by exporting:
+```tsx
+export const dynamic = 'force-static';
+```
+This ensures the route is built once and cached for all users. Example:
+
+```tsx
+// app/api/time/route.ts
+
+export const dynamic = "force-static";
+
+export async function GET() {
+  return Response.json({ time: new Date().toLocaleTimeString() });
+}
+```
+## 🔎 Dev Mode vs Production Mode
+- In dev mode, caching is disabled for convenience (changes are always shown).
+
+- In production, the route is cached at build time, and will not change on refresh.
+
+>Example: If the app was built at 10:00:00 AM, GET /api/time will always return that time until the app is rebuilt.
+
+## 🔁 Revalidating with ISR (Incremental Static Regeneration)
+To automatically refresh the cached data after a certain period, use:
+
+```tsx
+export const revalidate = 10; // seconds
+```
+```tsx
+// app/api/time/route.ts
+
+export const dynamic = "force-static";
+export const revalidate = 10;
+
+export async function GET() {
+  return Response.json({ time: new Date().toLocaleTimeString() });
+}
+```
+## 🔁 How It Works
+- First request → data is cached
+
+- Next requests (within 10s) → same cached response
+
+- After 10s → next request triggers rebuild in background
+
+- Subsequent request → receives fresh data
+
+## ⚠️ Limitations of Caching
+❌ Caching only applies to GET handlers.
+
+❌ Routes using headers(), cookies(), or the request object can't be cached.
+
+❌ POST, PUT, DELETE methods are never cached.
+
+## Summary
+| Behavior                        | Supported?      |
+| ------------------------------- | --------------- |
+| Static caching (`force-static`) | ✅ GET only      |
+| Revalidation (`revalidate`)     | ✅ GET only      |
+| Caching with cookies/headers    | ❌ Not supported |
+| Caching POST/PUT/DELETE         | ❌ Not supported |
+>🔁 Caching in route handlers improves performance and reduces backend load for rarely-changing data.
+
+</details>

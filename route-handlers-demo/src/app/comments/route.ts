@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { comments } from "./data";
 import { NextRequest } from "next/server";
 
