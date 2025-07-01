@@ -2346,3 +2346,86 @@ Client Side Rendering (CSR) is a rendering strategy where **the browser (client)
 | Use Cases     | SPAs, dashboards, real-time tools |
 </details>
 
+<details>
+<summary><strong>🖥️ Server-Side Rendering (SSR)</strong></summary>
+
+## 🌐 What is Server Side Rendering?
+
+Server-Side Rendering (SSR) means generating the HTML for a page **on the server** for every incoming request.
+
+Unlike Client-Side Rendering, where the browser builds the UI after JavaScript loads, SSR ensures users receive a **fully-formed HTML document** immediately.
+
+---
+
+## ⚙️ How SSR Works
+
+```txt
+1. User requests a page
+2. Server runs the React code
+3. HTML is rendered and sent back to the browser
+4. Browser displays HTML
+5. JavaScript bundle loads and hydration begins
+```
+
+## ✅ Benefits of SSR
+Faster First Paint (TTFB): Browser can render meaningful content faster
+
+SEO Friendly: Crawlers see complete HTML
+
+Personalized Content: Great for dynamic data (e.g., dashboards, feeds)
+
+## 💧 Hydration Explained
+>Hydration is the process of attaching React’s JavaScript logic to the server-rendered HTML.
+
+After SSR sends static HTML, React kicks in on the client side to:
+
+Initialize the component tree
+
+Attach event listeners (e.g., onClick, onChange)
+
+Restore app state and interactivity
+
+### 🧰 SSR vs SSG
+| Feature         | SSR                         | SSG                    |
+| --------------- | --------------------------- | ---------------------- |
+| Render Timing   | Per request (on demand)     | At build time          |
+| Performance     | Slower (depends on request) | Faster (prebuilt HTML) |
+| Personalization | ✅ Yes                       | ❌ No (static only)     |
+| Use Cases       | Auth pages, dashboards      | Blogs, docs, marketing |
+
+## ⚠️ Drawbacks of SSR
+### 🐌 1. You must fetch everything before showing anything
+Data fetching (from DB/API) must be complete before server can send the page
+
+Delays time to first byte (TTFB)
+
+### 📦 2. You must load everything before hydration
+Entire component tree must be identical on client & server
+
+JS bundle must load fully before hydration can begin
+
+### 🔁 3. You must hydrate everything before interacting
+Hydration is synchronous
+
+No partial interactivity — the entire page must hydrate first
+
+## 🌊 Waterfall Problem
+>SSR causes an "all or nothing" rendering waterfall:
+
+1. Load and resolve all data
+
+2. Send and load all JavaScript
+
+3. Hydrate entire component tree
+
+4. Then finally allow interactivity
+
+This sequence blocks user interactions and may cause delays or jank.
+
+## 🔁 Why React Moved Beyond Traditional SSR
+These limitations led to a new architecture: Streaming SSR + React Server Components (RSC)
+
+>Instead of rendering everything at once, the UI can be sent in chunks — streaming meaningful parts first and deferring the rest.
+
+![How SSR works](./route-handlers-demo/public/png/SSR.png)
+</details>
