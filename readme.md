@@ -1,3 +1,30 @@
+
+
+# Multiple Root Layouts and Metadata in Next.js
+
+<details>
+<summary><strong>📁 Multiple Root Layouts</strong></summary>
+
+### 🧩 Route Group Usage
+Organize your project structure without affecting URLs.  
+Apply layouts selectively to specific parts of the application.
+
+### 🛠️ Steps
+
+Create two route groups in the `app` folder:
+
+'''bash
+app/
+├── (marketing)/
+│   ├── customers/
+│   └── revenue/     ← move root layout here
+└── (auth)/
+├── login/
+└── register/    ← create root layout here
+'''
+
+
+
 <details>
 <summary><strong>📁 Route Groups in Next.js</strong></summary>
 
