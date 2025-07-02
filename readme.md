@@ -23,7 +23,7 @@ app/
 └── register/    ← create root layout here
 '''
 
-
+</details>
 
 <details>
 <summary><strong>📁 Route Groups in Next.js</strong></summary>
