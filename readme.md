@@ -13,7 +13,7 @@ Apply layouts selectively to specific parts of the application.
 
 Create two route groups in the `app` folder:
 
-'''bash
+```bash
 app/
 ├── (marketing)/
 │   ├── customers/
@@ -21,7 +21,7 @@ app/
 └── (auth)/
 ├── login/
 └── register/    ← create root layout here
-'''
+```
 
 Multiple Root Layouts allow you to apply different layouts to specific parts of your application.
 
