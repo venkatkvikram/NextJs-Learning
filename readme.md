@@ -23,6 +23,39 @@ app/
 └── register/    ← create root layout here
 '''
 
+Multiple Root Layouts allow you to apply different layouts to specific parts of your application.
+
+</details>
+
+---
+
+<details>
+<summary><strong>🔖 Routing Metadata</strong></summary>
+
+### 🌐 SEO & How Next.js Helps
+
+The Metadata API in Next.js is a powerful feature that lets us define metadata for each page.  
+Metadata ensures the content looks **great** when it's shared or indexed by search engines.
+
+### 📌 Ways to Handle Metadata
+
+1. Export a static metadata object.
+2. Generate dynamic metadata using the `generateMetadata` function.
+
+</details>
+
+---
+
+<details>
+<summary><strong>⚙️ Configuring Metadata</strong></summary>
+
+### 📝 Metadata Rules
+
+- Both `layout.tsx` and `page.tsx` can export metadata.
+- Layout metadata applies to all its pages.
+- Page metadata is specific to the individual page.
+- It follows a top-down order, starting from the **root-level** layout.
+
 </details>
 
 <details>
