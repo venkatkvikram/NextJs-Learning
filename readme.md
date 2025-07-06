@@ -1,11 +1,10 @@
-
-
 # Multiple Root Layouts and Metadata in Next.js
 
 <details>
 <summary><strong>📁 Multiple Root Layouts</strong></summary>
 
 ### 🧩 Route Group Usage
+
 Organize your project structure without affecting URLs.  
 Apply layouts selectively to specific parts of the application.
 
@@ -1715,7 +1714,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 
 </details>
 
-
 <details>
 <summary><strong>📁 URL Query Parameters in Route Handlers</strong></summary>
 
@@ -1742,6 +1740,7 @@ app/
 ```
 
 ## `route.ts` Example Using `NextRequest`
+
 ```tsx
 import { NextRequest } from "next/server";
 import { comments } from "./data";
@@ -1750,29 +1749,32 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
 
-  const filteredComments = query
-    ? comments.filter((comment) => comment.text.includes(query))
-    : comments;
+  const filteredComments = query ? comments.filter((comment) => comment.text.includes(query)) : comments;
 
   return Response.json(filteredComments);
 }
 ```
 
 ## Sample Request
+
 ```bash
 GET /comments?query=great
 ```
+
 ### Response:
+
 Returns all comments whose text includes `great`.
 
 ## Summary
+
 | Feature                 | Details                             |
 | ----------------------- | ----------------------------------- |
 | Request type            | `NextRequest` from `next/server`    |
 | Access query parameters | `request.nextUrl.searchParams`      |
 | Works with              | GET, POST, etc. in route handlers   |
 | Server-side only        | Yes (no exposure in client browser) |
->📘 This is especially useful for filtering, pagination, and search functionality on the server.
+
+> 📘 This is especially useful for filtering, pagination, and search functionality on the server.
 
 </details>
 
@@ -1787,18 +1789,18 @@ Headers represent **metadata** for both the **request** and **response**. They'r
 
 ### 🔁 Request Headers (from Client → Server)
 
-| Header         | Purpose                                                                 |
-|----------------|-------------------------------------------------------------------------|
-| `User-Agent`   | Identifies client browser/device                                        |
-| `Accept`       | Tells server what content types the client can handle                  |
-| `Authorization`| Sends credentials or tokens to authenticate the client                 |
+| Header          | Purpose                                                |
+| --------------- | ------------------------------------------------------ |
+| `User-Agent`    | Identifies client browser/device                       |
+| `Accept`        | Tells server what content types the client can handle  |
+| `Authorization` | Sends credentials or tokens to authenticate the client |
 
 ---
 
 ### 🔁 Response Headers (from Server → Client)
 
-| Header         | Purpose                                                                 |
-|----------------|-------------------------------------------------------------------------|
+| Header         | Purpose                                                                |
+| -------------- | ---------------------------------------------------------------------- |
 | `Content-Type` | Specifies data format returned (`text/html`, `application/json`, etc.) |
 
 ---
@@ -1813,9 +1815,11 @@ app/
 ```
 
 ## 🧪 Reading Headers in Next.js
+
 <h1>Next.js (App Router) gives us two ways to read incoming request headers:</h1>
 
 ### 1️⃣ Via `request.headers`
+
 ```tsx
 import { NextRequest } from "next/server";
 
@@ -1825,6 +1829,7 @@ export async function GET(request: NextRequest) {
   return new Response("Profile API data");
 }
 ```
+
 ### 2️⃣ Via headers() Helper (Read-Only)
 
 ```tsx
@@ -1836,9 +1841,11 @@ export async function GET() {
   return new Response("Profile API data");
 }
 ```
->🔒 Note: Headers from headers() are read-only. You can't mutate them.
+
+> 🔒 Note: Headers from headers() are read-only. You can't mutate them.
 
 ### 🧾 Setting Response Headers
+
 To send custom headers back to the client, pass them into the Response constructor:
 
 ```tsx
@@ -1851,15 +1858,19 @@ export async function GET() {
   });
 }
 ```
->⚠️ If you don’t explicitly set the content-type, it defaults to `text/plain`.
+
+> ⚠️ If you don’t explicitly set the content-type, it defaults to `text/plain`.
 
 ## Summary
+
 | Action                  | Method                            |
 | ----------------------- | --------------------------------- |
 | Read request headers    | `request.headers` or `headers()`  |
 | Set response headers    | `new Response(body, { headers })` |
 | Headers are server-only | Yes — secure from browser access  |
->📘 Headers power content negotiation, security, and behavior across HTTP. They're essential for advanced backend logic.
+
+> 📘 Headers power content negotiation, security, and behavior across HTTP. They're essential for advanced backend logic.
+
 </details>
 
 <details>
@@ -1891,11 +1902,15 @@ export async function GET() {
   });
 }
 ```
->⚠️ This sets the cookie theme=dark in the browser.
+
+> ⚠️ This sets the cookie theme=dark in the browser.
 
 # 📖 Reading Cookies
+
 ## You have two ways to access cookies in App Router:
+
 ### 1️⃣ From `request.cookies` (Request Parameter)
+
 ```tsx
 import { NextRequest } from "next/server";
 
@@ -1924,16 +1939,19 @@ export async function GET() {
   return new Response("Cookie set and read successfully");
 }
 ```
->🧠 cookies() is a built-in function that works on the server and gives read/write access to cookies in route handlers.
+
+> 🧠 cookies() is a built-in function that works on the server and gives read/write access to cookies in route handlers.
 
 ## Summary
+
 | Task                  | Method                                |
 | --------------------- | ------------------------------------- |
 | Read cookie           | `request.cookies.get("key")`          |
 | Read/write cookie     | `cookies().get()` / `cookies().set()` |
 | Set cookie (response) | Use `Set-Cookie` in response header   |
 
->🍪 Cookies help maintain persistent state across requests and power authentication, customization, and analytics.
+> 🍪 Cookies help maintain persistent state across requests and power authentication, customization, and analytics.
+
 </details>
 
 <details>
@@ -1965,6 +1983,7 @@ app/
 ```
 
 ## 🔀 v1 → v2 Redirect (Soft Deprecation)
+
 `/app/api/v1/users/route.ts`
 
 ```tsx
@@ -1974,9 +1993,11 @@ export async function GET() {
   redirect("/api/v2/users"); // Seamlessly forward to new endpoint
 }
 ```
->✅ Ideal for keeping v1 endpoint functional while encouraging clients to switch.
+
+> ✅ Ideal for keeping v1 endpoint functional while encouraging clients to switch.
 
 ## 🧠 Why This Works Well
+
 - The redirect helps avoid code duplication.
 
 - Allows you to monitor usage of the old endpoint (log access, warn users).
@@ -1984,6 +2005,7 @@ export async function GET() {
 - Lets you deprecate cleanly in future.
 
 ## 🆕 Version 2 with Improved Structure
+
 `/app/api/v2/users/route.ts`
 
 ```tsx
@@ -2065,11 +2087,13 @@ export async function GET() {
 ```
 
 ## Summary
+
 | Endpoint        | Behavior                     |
 | --------------- | ---------------------------- |
 | `/api/v1/users` | Redirects to `/api/v2/users` |
 | `/api/v2/users` | Returns structured user data |
->🔄 Redirection is a clean, scalable way to phase out old endpoints and onboard clients to improved APIs.
+
+> 🔄 Redirection is a clean, scalable way to phase out old endpoints and onboard clients to improved APIs.
 
 </details>
 
@@ -2098,13 +2122,17 @@ export async function GET() {
   return Response.json(categories);
 }
 ```
->This endpoint will be executed on every request, even if the data hasn't changed.
+
+> This endpoint will be executed on every request, even if the data hasn't changed.
 
 ## ✅ Enable Static Caching
+
 You can opt into static caching by exporting:
+
 ```tsx
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 ```
+
 This ensures the route is built once and cached for all users. Example:
 
 ```tsx
@@ -2116,19 +2144,23 @@ export async function GET() {
   return Response.json({ time: new Date().toLocaleTimeString() });
 }
 ```
+
 ## 🔎 Dev Mode vs Production Mode
+
 - In dev mode, caching is disabled for convenience (changes are always shown).
 
 - In production, the route is cached at build time, and will not change on refresh.
 
->Example: If the app was built at 10:00:00 AM, GET /api/time will always return that time until the app is rebuilt.
+> Example: If the app was built at 10:00:00 AM, GET /api/time will always return that time until the app is rebuilt.
 
 ## 🔁 Revalidating with ISR (Incremental Static Regeneration)
+
 To automatically refresh the cached data after a certain period, use:
 
 ```tsx
 export const revalidate = 10; // seconds
 ```
+
 ```tsx
 // app/api/time/route.ts
 
@@ -2139,7 +2171,9 @@ export async function GET() {
   return Response.json({ time: new Date().toLocaleTimeString() });
 }
 ```
+
 ## 🔁 How It Works
+
 - First request → data is cached
 
 - Next requests (within 10s) → same cached response
@@ -2149,6 +2183,7 @@ export async function GET() {
 - Subsequent request → receives fresh data
 
 ## ⚠️ Limitations of Caching
+
 ❌ Caching only applies to GET handlers.
 
 ❌ Routes using headers(), cookies(), or the request object can't be cached.
@@ -2156,16 +2191,17 @@ export async function GET() {
 ❌ POST, PUT, DELETE methods are never cached.
 
 ## Summary
-| Behavior                        | Supported?      |
-| ------------------------------- | --------------- |
+
+| Behavior                        | Supported?       |
+| ------------------------------- | ---------------- |
 | Static caching (`force-static`) | ✅ GET only      |
 | Revalidation (`revalidate`)     | ✅ GET only      |
 | Caching with cookies/headers    | ❌ Not supported |
 | Caching POST/PUT/DELETE         | ❌ Not supported |
->🔁 Caching in route handlers improves performance and reduces backend load for rarely-changing data.
+
+> 🔁 Caching in route handlers improves performance and reduces backend load for rarely-changing data.
 
 </details>
-
 
 <details>
 <summary><strong>🛡️ Middleware in Next.js</strong></summary>
@@ -2191,6 +2227,7 @@ src/middleware.ts
 ```
 
 ## ✅ Redirect Example
+
 Scenario:
 Redirect users navigating to `/profile` to `/home`.
 
@@ -2205,9 +2242,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: "/profile", // apply middleware only on this route
 };
-
 ```
-
 
 ## 🧠 Conditional Redirect Logic
 
@@ -2223,6 +2258,7 @@ export function middleware(request: NextRequest) {
 ```
 
 ## 🔀 URL Rewrites (vs Redirects)
+
 - Redirects change the URL in the browser
 
 - Rewrites keep the browser URL unchanged but serve different content
@@ -2252,6 +2288,7 @@ export function middleware(request: NextRequest) {
 ```
 
 ## 🧾 Setting Custom Headers
+
 ```tsx
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -2263,7 +2300,9 @@ export function middleware(request: NextRequest) {
 ```
 
 ## 🛠 Matcher Configuration
+
 You can control where middleware applies using the matcher key.
+
 ```tsx
 export const config = {
   matcher: ["/profile", "/dashboard/:path*"], // multiple routes, dynamic segments
@@ -2271,8 +2310,9 @@ export const config = {
 ```
 
 ## Summary
-| Feature                       | Supported in Middleware                    |
-| ----------------------------- | ------------------------------------------ |
+
+| Feature                       | Supported in Middleware                     |
+| ----------------------------- | ------------------------------------------- |
 | Redirects                     | ✅ Yes                                      |
 | Rewrites                      | ✅ Yes                                      |
 | Cookie manipulation           | ✅ Yes                                      |
@@ -2280,14 +2320,9 @@ export const config = {
 | Query params access           | ✅ Yes                                      |
 | Body access (e.g., POST body) | ❌ No (Middleware only handles headers/URL) |
 
->🧩 Middleware gives you global control over request behavior with zero client-side code.
+> 🧩 Middleware gives you global control over request behavior with zero client-side code.
 
 </details>
-
-
-
-
-
 
 <details>
 <summary><strong>⚙️ Rendering in Next.js</strong></summary>
@@ -2314,37 +2349,35 @@ In React, rendering is primarily **client-side**:
 
 Next.js enhances the rendering model with multiple strategies to balance performance, SEO, and interactivity:
 
-| Strategy               | Description                                                                 | When It Happens          |
-|------------------------|-----------------------------------------------------------------------------|--------------------------|
-| **Static Rendering**   | HTML is generated **at build time** and served instantly                   | Build time               |
-| **Server-Side Rendering (SSR)** | HTML is generated **on every request** on the server            | Per request              |
-| **Client-Side Rendering (CSR)** | Rendering happens entirely in the browser after loading JS bundle | In the browser           |
-| **Incremental Static Regeneration (ISR)** | Pages are statically generated but updated at runtime     | Post-deploy              |
-| **Streaming / React Suspense** | Allows progressive rendering of components (loading states, etc.) | Mixed (client + server)  |
+| Strategy                                  | Description                                                       | When It Happens         |
+| ----------------------------------------- | ----------------------------------------------------------------- | ----------------------- |
+| **Static Rendering**                      | HTML is generated **at build time** and served instantly          | Build time              |
+| **Server-Side Rendering (SSR)**           | HTML is generated **on every request** on the server              | Per request             |
+| **Client-Side Rendering (CSR)**           | Rendering happens entirely in the browser after loading JS bundle | In the browser          |
+| **Incremental Static Regeneration (ISR)** | Pages are statically generated but updated at runtime             | Post-deploy             |
+| **Streaming / React Suspense**            | Allows progressive rendering of components (loading states, etc.) | Mixed (client + server) |
 
 ---
 
 ## 🛠️ When to Use What?
 
-| Use Case                          | Recommended Rendering Strategy       |
-|-----------------------------------|--------------------------------------|
-| Marketing Pages (About, Home)     | **Static Rendering** (fast + SEO)    |
-| Product Pages with Dynamic Content| **Server-Side Rendering / ISR**      |
-| Authenticated Dashboards          | **Client-Side Rendering**            |
-| Real-time Data (chat, sockets)    | **Client-Side Rendering**            |
-| Blog Articles (editable)          | **ISR + Revalidation**               |
+| Use Case                           | Recommended Rendering Strategy    |
+| ---------------------------------- | --------------------------------- |
+| Marketing Pages (About, Home)      | **Static Rendering** (fast + SEO) |
+| Product Pages with Dynamic Content | **Server-Side Rendering / ISR**   |
+| Authenticated Dashboards           | **Client-Side Rendering**         |
+| Real-time Data (chat, sockets)     | **Client-Side Rendering**         |
+| Blog Articles (editable)           | **ISR + Revalidation**            |
 
 ---
 
 ## 💡 Recap
 
-- React = client-only rendering  
+- React = client-only rendering
 - Next.js = hybrid rendering model (static + dynamic + client)
 - You choose **where rendering happens** for each page to balance performance and flexibility
 
 </details>
-
-
 
 <details>
 <summary><strong>⚛️ Client Side Rendering (CSR)</strong></summary>
@@ -2369,7 +2402,9 @@ Client Side Rendering (CSR) is a rendering strategy where **the browser (client)
 ```
 
 ## ⚠️ Drawbacks of CSR
+
 ### 🔍 1. SEO Limitations
+
 - Search engines prefer pre-rendered HTML.
 
 - In CSR, the initial response has no meaningful content — just an empty div.
@@ -2379,6 +2414,7 @@ Client Side Rendering (CSR) is a rendering strategy where **the browser (client)
 - If your data fetching is delayed or complex (e.g., deep component trees), crawlers may give up.
 
 ### 🐢 2. Performance & UX
+
 - Initial load time is longer because:
 
   - Browser must download JavaScript
@@ -2390,6 +2426,7 @@ Client Side Rendering (CSR) is a rendering strategy where **the browser (client)
 - Users may experience a blank screen delay before the UI appears
 
 ## ✅ When CSR is Okay
+
 - Authenticated dashboards (where SEO isn't needed)
 
 - Real-time apps (chat, admin panels)
@@ -2400,10 +2437,11 @@ Client Side Rendering (CSR) is a rendering strategy where **the browser (client)
 
 | Aspect        | CSR Behavior                      |
 | ------------- | --------------------------------- |
-| SEO           | ❌ Poor (no pre-rendered content)  |
+| SEO           | ❌ Poor (no pre-rendered content) |
 | Performance   | ⚠️ Slower initial load            |
-| Interactivity | ✅ Excellent after hydration       |
+| Interactivity | ✅ Excellent after hydration      |
 | Use Cases     | SPAs, dashboards, real-time tools |
+
 </details>
 
 <details>
@@ -2428,6 +2466,7 @@ Unlike Client-Side Rendering, where the browser builds the UI after JavaScript l
 ```
 
 ## ✅ Benefits of SSR
+
 Faster First Paint (TTFB): Browser can render meaningful content faster
 
 SEO Friendly: Crawlers see complete HTML
@@ -2435,7 +2474,8 @@ SEO Friendly: Crawlers see complete HTML
 Personalized Content: Great for dynamic data (e.g., dashboards, feeds)
 
 ## 💧 Hydration Explained
->Hydration is the process of attaching React’s JavaScript logic to the server-rendered HTML.
+
+> Hydration is the process of attaching React’s JavaScript logic to the server-rendered HTML.
 
 After SSR sends static HTML, React kicks in on the client side to:
 
@@ -2446,31 +2486,37 @@ Attach event listeners (e.g., onClick, onChange)
 Restore app state and interactivity
 
 ### 🧰 SSR vs SSG
+
 | Feature         | SSR                         | SSG                    |
 | --------------- | --------------------------- | ---------------------- |
 | Render Timing   | Per request (on demand)     | At build time          |
 | Performance     | Slower (depends on request) | Faster (prebuilt HTML) |
-| Personalization | ✅ Yes                       | ❌ No (static only)     |
+| Personalization | ✅ Yes                      | ❌ No (static only)    |
 | Use Cases       | Auth pages, dashboards      | Blogs, docs, marketing |
 
 ## ⚠️ Drawbacks of SSR
+
 ### 🐌 1. You must fetch everything before showing anything
+
 Data fetching (from DB/API) must be complete before server can send the page
 
 Delays time to first byte (TTFB)
 
 ### 📦 2. You must load everything before hydration
+
 Entire component tree must be identical on client & server
 
 JS bundle must load fully before hydration can begin
 
 ### 🔁 3. You must hydrate everything before interacting
+
 Hydration is synchronous
 
 No partial interactivity — the entire page must hydrate first
 
 ## 🌊 Waterfall Problem
->SSR causes an "all or nothing" rendering waterfall:
+
+> SSR causes an "all or nothing" rendering waterfall:
 
 1. Load and resolve all data
 
@@ -2483,11 +2529,13 @@ No partial interactivity — the entire page must hydrate first
 This sequence blocks user interactions and may cause delays or jank.
 
 ## 🔁 Why React Moved Beyond Traditional SSR
+
 These limitations led to a new architecture: Streaming SSR + React Server Components (RSC)
 
->Instead of rendering everything at once, the UI can be sent in chunks — streaming meaningful parts first and deferring the rest.
+> Instead of rendering everything at once, the UI can be sent in chunks — streaming meaningful parts first and deferring the rest.
 
 ![How SSR works](./route-handlers-demo/public/png/SSR.png)
+
 </details>
 
 <details>
@@ -2521,11 +2569,13 @@ React 18 introduced **Suspense on the server** to solve these challenges. Wrappi
 When wrapped in `<Suspense>`, slow sections (like the main content) can be deferred. Meanwhile, the rest of the page begins streaming immediately.
 
 React:
+
 - Sends **partial HTML** quickly
 - Streams missing pieces **later** as they become ready
 - Positions them correctly using **React-injected script markers**
 
 ### ✅ Benefit:
+
 Users can start seeing content before the full page is ready.
 
 ---
@@ -2535,12 +2585,15 @@ Users can start seeing content before the full page is ready.
 > "You don’t need to hydrate everything before anything becomes interactive."
 
 Traditionally, hydration is one big synchronous pass. With Suspense:
+
 - React hydrates components **as they load**
 - Sections load and become interactive **independently**
 - **Code splitting** allows large bundles to load separately using `React.lazy()`
 
 ### 🔄 Real-time Interaction:
+
 If a user clicks on a yet-to-be-hydrated section:
+
 - React detects it
 - **Hydrates the clicked component first**
 - Makes it interactive **instantly**
@@ -2567,8 +2620,8 @@ export default function Page() {
 }
 ```
 
-
 ## 👀 What the User Sees
+
 1. Initial HTML is streamed and displayed — fast visual feedback
 
 2. Core layout becomes interactive immediately
@@ -2578,7 +2631,6 @@ export default function Page() {
 ![Example 1](./route-handlers-demo/public/png/Suspense%20SSR/SSReg1.png)
 
 ![Example 2](./route-handlers-demo/public/png/Suspense%20SSR/SSReg2.png)
-
 
 ## ⚠️ Drawbacks of Suspense SSR
 
@@ -2645,10 +2697,11 @@ But it also opens the door to smarter approaches, like:
 ## 🚀 What Are React Server Components?
 
 React Server Components (RSC) introduce a **dual-component model**:
+
 - **Client Components**
 - **Server Components**
 
-This distinction is based on *where* the components execute and *what* they can access — not their UI responsibilities.
+This distinction is based on _where_ the components execute and _what_ they can access — not their UI responsibilities.
 
 ---
 
@@ -2657,6 +2710,7 @@ This distinction is based on *where* the components execute and *what* they can 
 Client Components are the React components you already know and use.
 
 ### ✅ Characteristics:
+
 - Can run on both **client** and **server** (for HTML pre-rendering)
 - Include interactivity: **state**, **effects**, **event listeners**
 - Can use browser APIs like `localStorage`, `navigator`, etc.
@@ -2671,6 +2725,7 @@ Client Components are the React components you already know and use.
 Server Components are a **new type of component** that run only on the **server**.
 
 ### ✅ Benefits:
+
 - **Zero client-side JavaScript** — never shipped to the browser
 - **No hydration required** → faster page interactivity
 - **Direct access** to databases, file systems, and private APIs
@@ -2688,14 +2743,14 @@ Server Components are a **new type of component** that run only on the **server*
 
 ## ⚙️ RSC Architecture in Action
 
-| Task | Server Component | Client Component |
-|------|------------------|------------------|
-| Data fetching | ✅ Yes | ⚠️ Limited |
-| Interactivity | ❌ No | ✅ Yes |
-| Access to `window`, `localStorage` | ❌ No | ✅ Yes |
-| Can access database | ✅ Yes | ❌ No |
-| Bundled into JS sent to client | ❌ No | ✅ Yes |
-| Needs hydration | ❌ No | ✅ Yes |
+| Task                               | Server Component | Client Component |
+| ---------------------------------- | ---------------- | ---------------- |
+| Data fetching                      | ✅ Yes           | ⚠️ Limited       |
+| Interactivity                      | ❌ No            | ✅ Yes           |
+| Access to `window`, `localStorage` | ❌ No            | ✅ Yes           |
+| Can access database                | ✅ Yes           | ❌ No            |
+| Bundled into JS sent to client     | ❌ No            | ✅ Yes           |
+| Needs hydration                    | ❌ No            | ✅ Yes           |
 
 > RSC separates rendering concerns smartly between server and client, boosting performance without sacrificing UX.
 
@@ -2719,3 +2774,74 @@ Server Components are a **new type of component** that run only on the **server*
 > 🎯 Understanding RSC is **key to mastering modern React and Next.js** performance strategies.
 
 ---
+</details>
+
+<details>
+<summary><strong>🧠 React Server Components (RSC) in Next.js</strong></summary>
+
+<br/>
+
+The **App Router** in **Next.js** is fully powered by the **React Server Components (RSC)** architecture.
+
+---
+
+### 📦 Default Behavior
+
+- Every component in a **Next.js App Router** app is a **Server Component** by default.
+- This means:
+  - No client-side bundle is created for them
+  - They **only run on the server**
+  - They're ideal for rendering static or data-driven content
+
+---
+
+### ⚙️ Advantages of Server Components in Next.js
+
+✅ **Zero bundle size**  
+✅ **Direct access to server-side resources** (e.g., databases, file systems)  
+✅ **Improved security** – sensitive logic and data stays on the server  
+✅ **Better SEO** – since HTML is server-rendered and readable by search engines
+
+> 🧪 Tip: If you `console.log()` inside a Server Component, the log appears in your **terminal** (not browser dev tools), and is prefixed with `[server]`.
+
+---
+
+### 🚫 Limitations of Server Components
+
+- Cannot use browser-only APIs like:
+  - `window`, `document`
+  - `localStorage`, `navigator`
+- Cannot handle **user interactions** (e.g., click events)
+- Cannot use **state**, **effects**, or **refs**
+
+---
+
+### 🎯 Opting into Client Components
+
+To convert a component into a **Client Component**, simply add the following directive at the **top of the file**:
+
+```tsx
+"use client";
+```
+
+### ✅ This allows:
+
+- Using browser APIs
+
+- Adding interactivity (event handlers, state, effects, etc.)
+
+> Once marked as a Client Component, it behaves like a traditional React component that runs in the browser and gets hydrated.
+
+## 📌 Summary
+
+- The Next.js App Router treats all components as Server Components by default
+
+- Use "use client" to opt-in to Client Components
+
+- Server Components = render-only, server-only, no interactivity
+
+- Client Components = interactive, can access browser APIs, require hydration
+
+> 🧩 The power of RSC in Next.js lies in mixing both types smartly to balance performance and interactivity.
+
+</details>
