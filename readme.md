@@ -2928,7 +2928,7 @@ If you're curious about what the **RSC payload** looks like during development:
 - Look under the `?_rsc` requests.
 - You'll see a JSON structure representing your component tree and stream data.
 
-![RSC Network Payload](./RSC-Network-Payload.png)
+![RSC Network Payload](./rendering-demo/public/RSC-Payload-json.jpeg)
 
 ---
 
