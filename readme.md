@@ -2916,7 +2916,7 @@ When we talk about **React Server Components (RSC)**, we're dealing with three k
 ---
 
 ### 📸 Visual Reference (Update Flow)
-![RSC Update Sequence](../rendering-demo/public/RSC-updating-sequence.jpe)
+![RSC Update Sequence](./rendering-demo/public/RSC-updating-sequence.jpe)
 
 ---
 
