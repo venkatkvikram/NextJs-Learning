@@ -2886,7 +2886,7 @@ When we talk about **React Server Components (RSC)**, we're dealing with three k
 ---
 
 ### 📸 Visual Reference (Initial Load)
-![RSC Loading Sequence](./RSC-Loading-Sequence.jpeg)
+![RSC Loading Sequence](./rendering-demo/public/RSC-loading-sequence.jpeg)
 
 ---
 
@@ -2916,7 +2916,7 @@ When we talk about **React Server Components (RSC)**, we're dealing with three k
 ---
 
 ### 📸 Visual Reference (Update Flow)
-![RSC Update Sequence](./RSC-Update-Sequence.jpeg)
+![RSC Update Sequence](../rendering-demo/public/RSC-updating-sequence.jpe)
 
 ---
 
