@@ -1,5 +1,3 @@
-# Multiple Root Layouts and Metadata in Next.js
-
 <details>
 <summary><strong>📁 Multiple Root Layouts</strong></summary>
 
@@ -26,7 +24,7 @@ Multiple Root Layouts allow you to apply different layouts to specific parts of 
 
 </details>
 
----
+
 
 <details>
 <summary><strong>🔖 Routing Metadata</strong></summary>
@@ -43,7 +41,7 @@ Metadata ensures the content looks **great** when it's shared or indexed by sear
 
 </details>
 
----
+
 
 <details>
 <summary><strong>⚙️ Configuring Metadata</strong></summary>
