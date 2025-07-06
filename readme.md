@@ -2843,3 +2843,93 @@ To convert a component into a **Client Component**, simply add the following dir
 > 🧩 The power of RSC in Next.js lies in mixing both types smartly to balance performance and interactivity.
 
 </details>
+
+<details>
+<summary><strong>📦 React Server Components - Loading and Update Sequence</strong></summary>
+
+### 🧩 Key Players in RSC
+When we talk about **React Server Components (RSC)**, we're dealing with three key players:
+- 🖥️ **Browser** (the client)
+- ⚙️ **Next.js** (our framework)
+- ⚛️ **React** (our library)
+
+---
+
+## 🚀 Initial Loading Sequence
+
+### 🔁 Step-by-step Breakdown
+
+1. When the browser requests a page:
+   - The **Next.js app router** matches the URL to a Server Component (SC).
+   - Next.js instructs **React** to render that SC.
+
+2. **React** renders the SC (and its child SCs), converting them into a **special JSON format** called the **RSC Payload**.
+
+3. If you open **DevTools → Network tab**, you can actually see the **RSC payload** being streamed.
+
+4. If a Server Component suspends (e.g. waiting for data):
+   - React **pauses rendering** that subtree and sends a **placeholder** instead.
+   - At the same time, it prepares **Client Component (CC) instructions**.
+
+5. **Next.js** combines the **RSC payload** + **CC instructions** to generate **HTML on the server**.
+
+6. That **HTML is streamed immediately** to the browser giving a **non-interactive preview**.
+
+7. Simultaneously, Next.js also **streams the RSC payload** as React renders each piece.
+
+8. The browser **processes the streamed payload** progressively and renders UI.
+
+9. When all Server and Client components finish loading, the **Final UI** is displayed.
+
+10. Then, **Client Components undergo hydration**, turning static HTML into an **interactive UI**.
+
+---
+
+### 📸 Visual Reference (Initial Load)
+![RSC Loading Sequence](./RSC-Loading-Sequence.jpeg)
+
+---
+
+## 🔄 Update Sequence (Client Re-fetch)
+
+### 🔁 How it works
+
+1. The **browser triggers a refetch** for a route or a section of the UI.
+
+2. **Next.js processes the request** and matches it to the correct Server Component.
+
+3. Next.js again tells React to render the updated SC tree.
+
+4. Unlike the initial load:
+   - We **do NOT generate new HTML**.
+   - Instead, **Next.js streams only the updated RSC payload**.
+
+5. Browser receives the streamed RSC response and:
+   - **Triggers a route re-render**.
+   - React performs **reconciliation** (merges new output with old UI).
+
+6. Because RSC uses **JSON instead of HTML**, React can **update without losing state**, like:
+   - User inputs
+   - Scroll positions
+   - Component focus
+
+---
+
+### 📸 Visual Reference (Update Flow)
+![RSC Update Sequence](./RSC-Update-Sequence.jpeg)
+
+---
+
+## 🛠️ Inspecting the Payload
+
+If you're curious about what the **RSC payload** looks like during development:
+
+- Open the **Network tab** in Chrome DevTools.
+- Look under the `?_rsc` requests.
+- You'll see a JSON structure representing your component tree and stream data.
+
+![RSC Network Payload](./RSC-Network-Payload.png)
+
+---
+
+</details>
