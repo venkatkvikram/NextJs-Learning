@@ -3154,6 +3154,23 @@ This ensures the page is **not cached**, and rendered fresh for every request �
 </details>
 
 
+
+<details>
+<summary><strong>📦 `generateStaticParams()` in Next.js</strong></summary>
+
+The `generateStaticParams()` function in Next.js is a powerful tool that:
+
+- Works alongside **dynamic route segments**
+- **Generates static routes during build time** instead of generating them on-demand at request time
+- Provides a significant **performance boost** by enabling static site generation (SSG)
+
+---
+
+### 🛒 Example: Product Details Page
+
+In a product details page like `/products/[id]/page.tsx`, we can use `generateStaticParams()` to statically generate certain routes.
+
+
 ```tsx
 
 import Link from "next/link";
@@ -3186,20 +3203,9 @@ return (
 
 is setup for dynamic rendering 
 
+at first when you run `npm run build` you'll see
 
-## 📦 `generateStaticParams()` in Next.js
-
-The `generateStaticParams()` function in Next.js is a powerful tool that:
-
-- Works alongside **dynamic route segments**
-- **Generates static routes during build time** instead of generating them on-demand at request time
-- Provides a significant **performance boost** by enabling static site generation (SSG)
-
----
-
-### 🛒 Example: Product Details Page
-
-In a product details page like `/products/[id]/page.tsx`, we can use `generateStaticParams()` to statically generate certain routes.
+![picture before generateStaticParams](./rendering-demo/public/generateStaticParams/Dyanmic%20Rendering%20before%20generateStatic.png)
 
 ```ts
 // app/products/[id]/page.tsx
@@ -3223,6 +3229,8 @@ Next.js will pre-render the following paths:
 - `/products/1`
 - `/products/2`
 - `/products/3`
+
+![picture after generateStaticParams](./rendering-demo/public/generateStaticParams/generateStaticParams.png)
 
 These are now **SSG (Static Site Generated)** — meaning they are pre-rendered as static HTML using the `generateStaticParams()` function.
 
@@ -3269,6 +3277,4 @@ This will statically generate the following paths at build time:
 ---
 
 > `generateStaticParams()` runs **at build time** and is one of the most effective ways to optimize dynamic routes by converting them into static pages ahead of time.
-
-
-
+</details>
