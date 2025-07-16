@@ -3110,6 +3110,11 @@ Even if you don’t use dynamic functions, you can force a route to be dynamic:
 export const dynamic = 'force-dynamic';
 ```
 
+### 📸 Visual Reference 
+![RSC Update Sequence](./rendering-demo/public/Dynamic-Rendering/DynamicRendering1.png)
+
+
+
 This ensures the page is **not cached**, and rendered fresh for every request — useful for:
 - Preparing for future dynamic behavior
 - Always showing real-time or personalized data
