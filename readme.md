@@ -3377,7 +3377,6 @@ export const dynamicParams = false;
 > `dynamicParams` helps you control how dynamic routes behave when they're not part of the pre-rendered list. Use it smartly based on your content needs and scale. 
 
 </details>
-
 <details>
 <summary><strong> 🚰 Streaming in Next.js</strong></summary>
 
@@ -3451,4 +3450,4 @@ export default function PageLayout({ children }) {
 ---
 
 > ⚡ Streaming turns slow server responses into smoother UX by letting users see something immediately while the rest of the UI loads in the background.
-
+</details>
