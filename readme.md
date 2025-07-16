@@ -3041,28 +3041,12 @@ Next.js uses **Prefetching** to make static routes feel instant:
 🧠 **Remember**: In production, performance is king. Static rendering helps deliver speed **without compromising user experience**.
 </details>
 
-```tsx
 
-import { cookies } from "next/headers";
 
-export const dynamic = "force-dynamic"; // make sure this is present
+</details>
 
-export default async function AboutPage() {
-  const cookieStore = await cookies(); // ✅ synchronous
-  const theme = cookieStore.get("theme");
-
-  console.log("Theme cookie:", theme);
-
-  return (
-    <>
-      <h1>About page!</h1>
-      <p>Theme: {theme?.value ?? "not set"}</p>
-    </>
-  );
-}
-```
-
-# 🔄 Dynamic Rendering in Next.js
+<details>
+<summary><strong>🔄 Dynamic Rendering in Next.js</strong></summary>
 
 ## 📖 What is Dynamic Rendering?
 
@@ -3094,11 +3078,23 @@ Next.js **automatically opts into dynamic rendering** if your route uses any **d
 
 Example:
 ```tsx
-import { cookies } from 'next/headers';
 
-export default function Page() {
-  const theme = cookies().get("theme");
-  return <p>Your theme is {theme?.value}</p>;
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic"; // make sure this is present
+
+export default async function AboutPage() {
+  const cookieStore = await cookies(); // ✅ synchronous
+  const theme = cookieStore.get("theme");
+
+  console.log("Theme cookie:", theme);
+
+  return (
+    <>
+      <h1>About page!</h1>
+      <p>Theme: {theme?.value ?? "not set"}</p>
+    </>
+  );
 }
 ```
 
@@ -3150,3 +3146,4 @@ This ensures the page is **not cached**, and rendered fresh for every request �
 
 💡 Tip: You can combine **static** and **dynamic** pages in the same app. Let Next.js pick what works best based on your usage.
 
+</details>
