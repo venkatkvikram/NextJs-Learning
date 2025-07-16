@@ -2935,7 +2935,7 @@ If you're curious about what the **RSC payload** looks like during development:
 </details>
 
 <details>
-<summary><strong>⚡ Static Rendering in Next.js App Router</strong></summary>summary>
+<summary><strong>⚡ Static Rendering in Next.js App Router</strong></summary>
 
 ---
 
@@ -2998,6 +2998,8 @@ This folder **mimics your route structure**. Each route includes:
 
 ---
 
+### 📸 Visual Reference 
+![RSC Update Sequence](./rendering-demo/public/Static-Rendering/StaticRendering1.png)
 ## 🔍 First Load JS & Shared Bundle
 
 - `First Load JS`: How much JS is downloaded when visiting a page initially.
