@@ -3278,3 +3278,100 @@ This will statically generate the following paths at build time:
 
 > `generateStaticParams()` runs **at build time** and is one of the most effective ways to optimize dynamic routes by converting them into static pages ahead of time.
 </details>
+
+## 🔄 Dynamic Params in Next.js
+
+When using `generateStaticParams()`, you may wonder:
+
+> What happens when someone tries to access a route with a dynamic segment **not listed** in the `generateStaticParams()` result?
+
+By default, **Next.js will still render those pages** — but **not in advance**. Instead, it will **statically generate them on-demand** at runtime (ISR: Incremental Static Regeneration).
+
+---
+
+### ⚙️ `dynamicParams` Option
+
+The `dynamicParams` config gives you control over this behavior.
+
+```ts
+export const dynamicParams = true; // or false
+```
+
+| Value         | Behavior                                                                 |
+|---------------|--------------------------------------------------------------------------|
+| `true` (default)  | Unlisted dynamic routes will be rendered on-demand during runtime      |
+| `false`        | Unlisted dynamic routes will return a **404 page** instead               |
+
+---
+
+### 📦 Example Use Case
+
+Suppose you're building a product details page at `/products/[id]/page.tsx` and using:
+
+```ts
+export async function generateStaticParams() {
+  return [
+    { id: "1" },
+    { id: "2" },
+    { id: "3" },
+  ];
+}
+```
+
+With:
+
+```ts
+export const dynamicParams = true;
+```
+
+- `/products/1` → statically generated at build time ✅  
+- `/products/5` → **generated on-demand at runtime** (not in list) ✅
+
+With:
+
+```ts
+export const dynamicParams = false;
+```
+
+- `/products/5` → not in list, so user gets a **404 error** ❌
+
+---
+
+### ✅ When to Use `dynamicParams: true`
+
+- 🔥 Large or growing datasets (e.g., e-commerce)
+- 🏷️ You want to pre-render only popular pages for performance
+- 🕓 Remaining pages should still load on-demand
+
+```ts
+// Example for an e-commerce app
+export const dynamicParams = true;
+```
+
+---
+
+### 🚫 When to Use `dynamicParams: false`
+
+- 📚 Static, limited content (e.g., blogs or documentation)
+- ✅ You know all valid pages upfront
+- 🛑 Any unknown page should show 404
+
+```ts
+// Example for a blog site
+export const dynamicParams = false;
+```
+
+---
+
+### 🧠 Summary
+
+| Scenario                       | `dynamicParams: true`          | `dynamicParams: false`         |
+|--------------------------------|-------------------------------|-------------------------------|
+| Large product catalog          | ✅ Allow on-demand rendering   | ❌ 404 if not pre-rendered     |
+| Small, fixed set of blog posts | ❌ Slower load for new items   | ✅ Fast 404 for unknown posts  |
+| Best for                       | E-commerce, marketplaces       | Blogs, help docs, portfolios   |
+
+---
+
+> `dynamicParams` helps you control how dynamic routes behave when they're not part of the pre-rendered list. Use it smartly based on your content needs and scale. 
+
