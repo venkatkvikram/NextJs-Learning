@@ -3279,7 +3279,8 @@ This will statically generate the following paths at build time:
 > `generateStaticParams()` runs **at build time** and is one of the most effective ways to optimize dynamic routes by converting them into static pages ahead of time.
 </details>
 
-## 🔄 Dynamic Params in Next.js
+<details>
+<summary><strong> 🔄 Dynamic Params in Next.js</strong></summary>
 
 When using `generateStaticParams()`, you may wonder:
 
@@ -3375,3 +3376,4 @@ export const dynamicParams = false;
 
 > `dynamicParams` helps you control how dynamic routes behave when they're not part of the pre-rendered list. Use it smartly based on your content needs and scale. 
 
+</details>
