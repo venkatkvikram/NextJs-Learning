@@ -3187,4 +3187,88 @@ return (
 is setup for dynamic rendering 
 
 
+## 📦 `generateStaticParams()` in Next.js
+
+The `generateStaticParams()` function in Next.js is a powerful tool that:
+
+- Works alongside **dynamic route segments**
+- **Generates static routes during build time** instead of generating them on-demand at request time
+- Provides a significant **performance boost** by enabling static site generation (SSG)
+
+---
+
+### 🛒 Example: Product Details Page
+
+In a product details page like `/products/[id]/page.tsx`, we can use `generateStaticParams()` to statically generate certain routes.
+
+```ts
+// app/products/[id]/page.tsx
+export async function generateStaticParams() {
+  return [
+    { id: "1" },
+    { id: "2" },
+    { id: "3" },
+  ];
+}
+```
+
+When you run:
+
+```bash
+npm run build
+```
+
+Next.js will pre-render the following paths:
+
+- `/products/1`
+- `/products/2`
+- `/products/3`
+
+These are now **SSG (Static Site Generated)** — meaning they are pre-rendered as static HTML using the `generateStaticParams()` function.
+
+---
+
+### 🔄 Multiple Dynamic Route Segments
+
+If your route has **multiple dynamic segments**, like:
+
+```
+/products/[category]/[product]/page.tsx
+```
+
+You can return an array of objects with both `category` and `product`:
+
+```ts
+// app/products/[category]/[product]/page.tsx
+export async function generateStaticParams() {
+  return [
+    { category: "electronics", product: "smartphone" },
+    { category: "electronics", product: "laptop" },
+    { category: "books", product: "science-fiction" },
+    { category: "books", product: "biography" },
+  ];
+}
+```
+
+This will statically generate the following paths at build time:
+
+- `/products/electronics/smartphone`
+- `/products/electronics/laptop`
+- `/products/books/science-fiction`
+- `/products/books/biography`
+
+---
+
+## 🚀 Why Use `generateStaticParams()`?
+
+✅ **Performance Boost**  
+✅ **Pre-rendered HTML** — Great for SEO and user experience  
+✅ **Supports Multiple Segments** — Ideal for complex dynamic routes  
+✅ **Build-Time Execution** — Keeps runtime server load low
+
+---
+
+> `generateStaticParams()` runs **at build time** and is one of the most effective ways to optimize dynamic routes by converting them into static pages ahead of time.
+
+
 
