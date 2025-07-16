@@ -3061,3 +3061,92 @@ export default async function AboutPage() {
   );
 }
 ```
+
+# 🔄 Dynamic Rendering in Next.js
+
+## 📖 What is Dynamic Rendering?
+
+Dynamic rendering is a **server-side rendering (SSR)** strategy where each user gets a unique version of the page — generated at **request time**.
+
+Use it when:
+- The data is **personalized**
+- You depend on **cookies**, **headers**, or **searchParams**
+- You can’t pre-generate content at build time
+
+Example use cases:
+- Social feeds
+- Logged-in dashboards
+- Shopping carts or order history
+- Multi-language personalization
+
+---
+
+## ⚙️ When Does Dynamic Rendering Happen?
+
+Next.js **automatically opts into dynamic rendering** if your route uses any **dynamic functions** like:
+
+- `cookies()`
+- `headers()`
+- `searchParams` (prop)
+- `draftMode()`
+- `connection()`
+- `after()` (used in Response streams)
+
+Example:
+```tsx
+import { cookies } from 'next/headers';
+
+export default function Page() {
+  const theme = cookies().get("theme");
+  return <p>Your theme is {theme?.value}</p>;
+}
+```
+
+Since `cookies()` is used, Next.js renders this **dynamically at runtime**.
+
+---
+
+## 🛠️ Force Dynamic Rendering Manually
+
+Even if you don’t use dynamic functions, you can force a route to be dynamic:
+
+```tsx
+export const dynamic = 'force-dynamic';
+```
+
+This ensures the page is **not cached**, and rendered fresh for every request — useful for:
+- Preparing for future dynamic behavior
+- Always showing real-time or personalized data
+
+---
+
+## 📊 Static vs Dynamic Rendering Comparison
+
+| Feature                           | Static Rendering                      | Dynamic Rendering                      |
+|-----------------------------------|----------------------------------------|----------------------------------------|
+| ⏳ When HTML is generated         | At build time (`next build`)           | On every request                        |
+| 💾 Can be cached (CDN)            | ✅ Yes                                  | ❌ No (unless manually cached)           |
+| 🎯 Use case                       | Blogs, docs, landing pages             | Authenticated, personalized pages       |
+| 🧩 Supports cookies/headers       | ❌ No                                   | ✅ Yes                                  |
+| ⚡ Initial page load speed        | Super fast (served from CDN)           | Slower (depends on backend/server load) |
+| 🔁 Supports real-time updates     | ❌ No                                   | ✅ Yes                                  |
+| ⚙️ Default in Next.js             | ✅ Yes (for simple routes)              | ✅ Auto if dynamic APIs are used         |
+| 🧠 Manual config option           | `export const dynamic = 'force-static'`| `export const dynamic = 'force-dynamic'`|
+
+---
+
+## 🧠 Summary
+
+- Dynamic Rendering means pages are rendered **on-demand per user**.
+- Next.js **auto-detects** dynamic behavior when using cookies, headers, or searchParams.
+- Use `export const dynamic = "force-dynamic"` to manually opt-in.
+- It's great for:
+  - Personalized UIs
+  - Authenticated dashboards
+  - Real-time or session-based content
+- **Static vs Dynamic?** You don’t have to choose — Next.js does it for you intelligently.
+
+---
+
+💡 Tip: You can combine **static** and **dynamic** pages in the same app. Let Next.js pick what works best based on your usage.
+
