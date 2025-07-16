@@ -2934,9 +2934,8 @@ If you're curious about what the **RSC payload** looks like during development:
 
 </details>
 
-
-
-# ⚡ Static Rendering in Next.js App Router
+<details>
+<summary><strong>⚡ Static Rendering in Next.js App Router</strong></summary>summary>
 
 ---
 
@@ -3038,5 +3037,5 @@ Next.js uses **Prefetching** to make static routes feel instant:
 ---
 
 🧠 **Remember**: In production, performance is king. Static rendering helps deliver speed **without compromising user experience**.
-
+</details>
 
