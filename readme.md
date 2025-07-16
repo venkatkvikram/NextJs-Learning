@@ -3377,3 +3377,78 @@ export const dynamicParams = false;
 > `dynamicParams` helps you control how dynamic routes behave when they're not part of the pre-rendered list. Use it smartly based on your content needs and scale. 
 
 </details>
+
+<details>
+<summary><strong> 🚰 Streaming in Next.js</strong></summary>
+
+**Streaming** is a server-side rendering strategy that enables **progressive UI rendering** — breaking down work into smaller chunks and sending them to the client **as soon as they’re ready**.
+
+---
+
+### 🧠 What is Streaming?
+
+Instead of waiting for **all** data and components to load before sending a complete HTML page:
+
+- The **server begins rendering parts of the UI** as soon as they’re ready.
+- These parts (or "chunks") are **streamed** to the browser one by one.
+- The browser **progressively renders** what it receives, improving perceived performance.
+
+---
+
+### ⚡ Benefits of Streaming
+
+✅ **Faster initial page loads**  
+✅ **Better user experience** on slower networks or slower data sources  
+✅ **Non-blocking rendering** — parts of the UI that are ready can be shown while others continue loading  
+✅ Built-in support via **React Suspense** and **App Router**
+
+---
+
+### 📦 Use Case
+
+When a section of your page (like the main content or a widget) relies on slow API responses or database queries, wrapping it in a `<Suspense>` boundary allows:
+
+- Faster display of headers, navbars, etc.
+- Placeholder UI for the slow section.
+- That section appears **automatically** once data is ready, **without a full page reload**.
+
+---
+
+### 🏗️ Built-in Streaming with App Router
+
+Streaming is **enabled by default** in Next.js' **App Router** architecture.
+
+You don’t need to configure anything special. Just use `React.Suspense` or `loading.tsx` in your layout to handle streaming seamlessly.
+
+```tsx
+// Example in a layout
+import { Suspense } from 'react';
+
+export default function PageLayout({ children }) {
+  return (
+    <>
+      <Header />
+      <Suspense fallback={<Loading />}>
+        {children}
+      </Suspense>
+    </>
+  );
+}
+```
+
+---
+
+### 🔁 Summary
+
+| Feature                  | Description |
+|--------------------------|-------------|
+| What is it?              | Progressive rendering of server HTML chunks |
+| Improves what?           | Initial load time and perceived performance |
+| Enabled by default?      | ✅ Yes, in App Router |
+| Based on React feature?  | ✅ Yes, uses `React.Suspense` |
+| Good for?                | Pages with slow data sources or large UIs |
+
+---
+
+> ⚡ Streaming turns slow server responses into smoother UX by letting users see something immediately while the rest of the UI loads in the background.
+
