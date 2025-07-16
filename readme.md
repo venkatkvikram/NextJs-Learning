@@ -3152,3 +3152,39 @@ This ensures the page is **not cached**, and rendered fresh for every request â€
 ðŸ’¡ Tip: You can combine **static** and **dynamic** pages in the same app. Let Next.js pick what works best based on your usage.
 
 </details>
+
+
+```tsx
+
+import Link from "next/link";
+
+export default function ProductsPage()  {
+    return (
+        <>
+        <h1>Featured Products</h1>
+        <Link href="/products/1">Product 1</Link>
+        <Link href="/products/2">Product 2</Link>
+        <Link href="/products/3">Product 3</Link>
+        </>
+    )
+}
+```
+
+is setup for static rendering
+
+
+```tsx
+export default async function ProductDetailsPage({params} : {params: Promise<{id: string}>}) {
+    const {id} = await params;
+return (
+    <h1>
+        Product {id} details rendered at {new Date().toLocaleTimeString()}
+    </h1>
+)
+} 
+```
+
+is setup for dynamic rendering 
+
+
+
