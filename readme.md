@@ -3451,3 +3451,6 @@ export default function PageLayout({ children }) {
 
 > ⚡ Streaming turns slow server responses into smoother UX by letting users see something immediately while the rest of the UI loads in the background.
 </details>
+<details>
+<summary><strong>
+
