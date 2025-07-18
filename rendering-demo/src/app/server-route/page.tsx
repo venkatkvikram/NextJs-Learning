@@ -8,7 +8,6 @@ export default function ServerRoutePage() {
     return (
         <div>
             <ImageSlider />
-            {clientResult}
         </div>
     )
 
