@@ -3797,3 +3797,41 @@ By properly isolating client-only code, you keep your application safe, robust, 
 
 </details>
 
+# Client Component Patterns  
+## Client Component Placement
+
+The strategic placement of client components in the component tree is **super important for optimizing the performance of your application**.
+
+- Server components can't handle state or interactivity, so client components are necessary for these features.
+- The key recommendation: **Position client components as low as possible in your component tree**.
+
+---
+
+> **If `"use client"` is declared in the `Navbar` component, shouldn't that be the only component running client side?**
+
+No! When you mark a component with `"use client"` it doesn't just affect that component, but every child component tree below it.
+
+For example:
+
+- If your `Navbar` contains `NavLinks` and `NavSearch`, they will also become client components.
+- If you convert a high-level component into a client component just to add some interactivity, you're accidentally making every one of its subchildren run on the client as well.
+- This means **sending more code to the browser** and **losing the benefits** of server components.
+
+**That’s why we want to push client components as far down the tree as possible—ideally making them leaf components.**
+
+---
+
+## Example:
+
+
+
+
+
+## Summary
+
+- **Minimize client component scope:** Only use client components where state or interactivity is required.
+- **Optimize tree placement:** Push `"use client"` components as low (“leaf”) in the tree as possible.
+- **Preserve server benefits:** This keeps your server-rendering optimized and minimizes JavaScript sent to the browser.
+
+
+
