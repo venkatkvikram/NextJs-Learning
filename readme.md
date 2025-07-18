@@ -3658,10 +3658,6 @@ This approach ensures you can continue using popular React ecosystem packages wh
 
 </details>
 
-
-
-
-
 <details>
 <summary><strong> Server Component Pattern 3 : Context Providers </strong></summary>
 # Using Context Providers with React Server Components
@@ -3753,4 +3749,10 @@ and import it in the server componnet with the children props
 	•	Do not convert a Server Component to a Client Component just to use context.
 	•	Instead, create a separate Client Component for context usage and import it into the Server Component using the  children  prop.
 This approach lets you leverage React Context in modern server components architectures without compromising performance or architectural clarity.
+</details>
+
+<details>
+<summary><strong>Client Component Pattern 1</strong></summary>
+
+
 </details>
