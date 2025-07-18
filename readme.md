@@ -3530,3 +3530,39 @@ Using `server-only` ensures a **clear separation of responsibilities** between y
 > 🛡️ Think of `server-only` as a **security guard**: it blocks server code from sneaking into your public-facing JavaScript bundle.
 
 </details>
+
+
+
+```tsx
+"use client"
+import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+export default function ClientRoutePage() {
+    const settings = {
+        dots: true,
+      };
+      return (
+        <div className="image-slider-container">
+          <Slider {...settings}>
+            <div>
+              <img src="http://picsum.photos/400/200" />
+            </div>
+            <div>
+              <img src="http://picsum.photos/400/200" />
+            </div>
+            <div>
+              <img src="http://picsum.photos/400/200" />
+            </div>
+            <div>
+              <img src="http://picsum.photos/400/200" />
+            </div>
+          </Slider>
+        </div>
+      );
+}
+```
+
+Now if we try to use this in server component it will give us an error as it can be used only inside client components but inorder to use it in server component. We can create a seperate client component and import it inside the server component 
