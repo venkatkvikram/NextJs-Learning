@@ -3660,3 +3660,78 @@ This approach ensures you can continue using popular React ecosystem packages wh
 
 
 
+
+
+<details>
+<summary><strong> Server Component Pattern 3 : Context Providers </strong></summary>
+
+```tsx
+"use client"
+
+import { createContext, useContext } from "react";
+
+type Theme = {
+    colors: {
+      primary: string;
+      secondary: string;
+    };
+  };
+  
+  const defaultTheme: Theme = {
+    colors: {
+      primary: "#007bff",
+      secondary: "#6c757d",
+    }
+  }
+  const ThemeContext = createContext<Theme>(defaultTheme);
+
+  export const ThemeProvider = ({children} : {children : React.ReactNode}) => {
+    return (
+        <ThemeContext.Provider value={defaultTheme}>
+            {children}
+        </ThemeContext.Provider>
+    )
+  }
+
+  export const useTheme = () =>useContext(ThemeContext)
+```
+
+
+Wrapping in `Layout.tsx`
+```tsx
+      <ThemeProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+        </body>
+      </ThemeProvider>
+```
+Usage : 
+```tsx
+"use client"
+import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { useTheme } from '@/components/theme-provider';
+
+
+export default function ClientRoutePage() {
+    const theme = useTheme();
+    const settings = {
+        dots: true,
+      };
+      return (
+        <h1 style={{color: theme.colors.primary}}>Client Router page </h1>
+      );
+}
+```
+
+Even though we are wrapping our application in a client
+component which is a theme provider server components
+further down the tree stay as server components
+
+Instead of converting a server component to a client component create a seperate client component
+and import it in the server componnet with the children props
+</details>
