@@ -3664,6 +3664,18 @@ This approach ensures you can continue using popular React ecosystem packages wh
 
 <details>
 <summary><strong> Server Component Pattern 3 : Context Providers </strong></summary>
+# Using Context Providers with React Server Components
+
+## Overview
+
+Context providers typically live near the root of an application to share global state and logic (for example, your application's theme). However, **React context isn't supported in Server Components**. If you try to create a context at your application's root, you'll run into an error.
+
+**The solution:**  
+Create your Context and render its provider inside a dedicated Client Component.
+
+---
+
+## Example: Theme Provider
 
 ```tsx
 "use client"
@@ -3697,7 +3709,7 @@ type Theme = {
 ```
 
 
-Wrapping in `Layout.tsx`
+## Wrapping in `Layout.tsx`
 ```tsx
       <ThemeProvider>
         <body
@@ -3708,6 +3720,7 @@ Wrapping in `Layout.tsx`
       </ThemeProvider>
 ```
 Usage : 
+
 ```tsx
 "use client"
 import React from 'react';
@@ -3734,4 +3747,10 @@ further down the tree stay as server components
 
 Instead of converting a server component to a client component create a seperate client component
 and import it in the server componnet with the children props
+
+### Key Notes
+	•	Even though we are wrapping our application in a Client Component ( ThemeProvider ), Server Components further down the tree can remain Server Components.
+	•	Do not convert a Server Component to a Client Component just to use context.
+	•	Instead, create a separate Client Component for context usage and import it into the Server Component using the  children  prop.
+This approach lets you leverage React Context in modern server components architectures without compromising performance or architectural clarity.
 </details>
