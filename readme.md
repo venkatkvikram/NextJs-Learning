@@ -3749,7 +3749,9 @@ and import it in the server componnet with the children props
 	•	Instead, create a separate Client Component for context usage and import it into the Server Component using the  children  prop.
 This approach lets you leverage React Context in modern server components architectures without compromising performance or architectural clarity.
 </details>
-# Client Component Patterns: Client-only Code
+
+<details>
+<summary><strong> Client Component Patterns 1: `client-only` Code</strong></summary>
 
 ## Why Keep Some Code Client-side?
 
@@ -3782,5 +3784,5 @@ To guarantee that certain code is never executed on the server, you can use the 
 
 ---
 By properly isolating client-only code, you keep your application safe, robust, and performant!
-
+</details>
 
