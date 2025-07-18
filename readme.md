@@ -19,7 +19,6 @@ app/
 ├── login/
 └── register/    ← create root layout here
 ```
-
 Multiple Root Layouts allow you to apply different layouts to specific parts of your application.
 
 </details>
@@ -3750,4 +3749,38 @@ and import it in the server componnet with the children props
 	•	Instead, create a separate Client Component for context usage and import it into the Server Component using the  children  prop.
 This approach lets you leverage React Context in modern server components architectures without compromising performance or architectural clarity.
 </details>
+# Client Component Patterns: Client-only Code
+
+## Why Keep Some Code Client-side?
+
+While it’s important to execute certain operations on the server, it’s **equally crucial to restrict some functionality to the client side**. Client-only code often deals with **browser-specific features**, such as:
+
+- DOM manipulation
+- Accessing or interacting with the `window` object
+- Using `localStorage` or other browser APIs
+
+These features **are not available on the server**, so attempting to run such code during server-side rendering will result in errors.
+
+## Best Practice
+
+To avoid server-side rendering errors:
+- **Client-specific operations should be encapsulated in Client Components**.
+- Always use the `"use client"` directive at the top of files containing client-only logic.
+
+## Preventing Server Usage of Client-side Code
+
+To guarantee that certain code is never executed on the server, you can use the [`client-only`](https://www.npmjs.com/package/client-only) package.
+
+> The `client-only` package helps assert that code/components are strictly evaluated on the client and throws an error if accidentally used on the server.
+# Client Component Patterns: Client-only Code
+
+## Summary
+
+- **Client Components** are the right place for browser-only logic.
+- Use `"use client"` to mark such files.
+- Consider using [`client-only`](https://www.npmjs.com/package/client-only) to prevent accidental server usage of client-side code.
+
+---
+By properly isolating client-only code, you keep your application safe, robust, and performant!
+
 
