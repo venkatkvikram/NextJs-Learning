@@ -3452,7 +3452,7 @@ export default function PageLayout({ children }) {
 > ⚡ Streaming turns slow server responses into smoother UX by letting users see something immediately while the rest of the UI loads in the background.
 </details>
 <details>
-<summary><strong>🔒 Server-Only Code in Next.js</strong></summary>
+<summary><strong> Server Component Pattern 1 : 🔒 Server-Only Code in Next.js</strong></summary>
 
 In Next.js, **some code should only run on the server** — like sensitive logic, direct database access, or anything involving environment variables. Accidentally sending this to the client can lead to:
 
@@ -3531,7 +3531,7 @@ Using `server-only` ensures a **clear separation of responsibilities** between y
 
 </details>
 <details>
-<summary><strong>Using Third-Party Packages with React Server Components</strong></summary>
+<summary><strong> Server Component Pattern 2 : Using Third-Party Packages with React Server Components</strong></summary>
 
 ## Overview
 
@@ -3588,10 +3588,52 @@ export default function ClientRoutePage() {
         </div>
       );
 }
-'''
+```
 
 
 **Usage in a Server Component**
+
+```tsx
+import ImageSlider from "@/components/ImageSlider"
+import { serverSideFunction } from "../utils/server-utils"
+
+export default function ServerRoutePage() {
+    const result = serverSideFunction()
+    return <ImageSlider />
+}
+
+//ImageSlider.tsx
+"use client"
+
+import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+export default function ImageSlider() {
+  const settings = {
+    dots: true,
+  };
+  return (
+    <div className="image-slider-container">
+      <Slider {...settings}>
+        <div>
+          <img src="http://placekitten.com/g/400/200" />
+        </div>
+        <div>
+          <img src="http://placekitten.com/g/400/200" />
+        </div>
+        <div>
+          <img src="http://placekitten.com/g/400/200" />
+        </div>
+        <div>
+          <img src="http://placekitten.com/g/400/200" />
+        </div>
+      </Slider>
+    </div>
+  );
+}
+```
 
 
 - Place `"use client"` at the top of the file containing client-only logic.
@@ -3614,7 +3656,7 @@ export default function ClientRoutePage() {
 
 This approach ensures you can continue using popular React ecosystem packages while taking full advantage of React's Server Component architecture.
 
-
+</details>
 
 
 
