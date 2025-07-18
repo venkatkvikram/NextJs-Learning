@@ -3784,5 +3784,16 @@ To guarantee that certain code is never executed on the server, you can use the 
 
 ---
 By properly isolating client-only code, you keep your application safe, robust, and performant!
+
+
+## Summary
+
+- **Client Components** are the right place for browser-only logic.
+- Use `"use client"` to mark such files.
+- Consider using [`client-only`](https://www.npmjs.com/package/client-only) to prevent accidental server usage of client-side code.
+
+---
+By properly isolating client-only code, you keep your application safe, robust, and performant!
+
 </details>
 
