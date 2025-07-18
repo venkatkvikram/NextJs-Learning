@@ -3451,5 +3451,82 @@ export default function PageLayout({ children }) {
 
 > ⚡ Streaming turns slow server responses into smoother UX by letting users see something immediately while the rest of the UI loads in the background.
 </details>
+<details>
+<summary><strong>🔒 Server-Only Code in Next.js</strong></summary>
 
+In Next.js, **some code should only run on the server** — like sensitive logic, direct database access, or anything involving environment variables. Accidentally sending this to the client can lead to:
 
+- 🧨 **Bundle bloat**
+- 🔐 **Leaked secrets**
+- 📉 **Performance hits**
+- 🕵️‍♂️ **Exposed business logic**
+
+---
+
+### 🛑 Problem
+
+Since JavaScript modules can be shared between **Server Components** and **Client Components**, it’s **easy to mistakenly import server-only logic into the client side**.
+
+This can:
+- Include heavy backend libraries in the frontend bundle
+- Leak `.env` values or credentials
+- Make DB queries visible in browser dev tools
+
+---
+
+### ✅ Solution: `server-only` Package
+
+Next.js offers a simple fix — use the **`server-only`** package to restrict where your sensitive server-side logic can be imported.
+
+```ts
+// At the top of your server-only module
+import 'server-only';
+```
+
+This line acts like a **build-time firewall**:
+
+> 🚫 If a client component tries to import that file, the build will **fail** immediately.
+
+---
+
+### 🧪 Example
+
+```ts
+// lib/database.ts (server-only file)
+import 'server-only';
+
+export async function getUserById(id: string) {
+  // Connect to DB and return user data
+}
+```
+
+```tsx
+// app/page.tsx (✅ Server Component)
+import { getUserById } from '@/lib/database'; // Works fine
+```
+
+```tsx
+// components/UserWidget.tsx (❌ Client Component)
+'use client';
+
+import { getUserById } from '@/lib/database'; // ❌ Build error!
+```
+
+---
+
+### 🔐 Why This Matters
+
+| Problem                              | Risk                                        |
+|--------------------------------------|---------------------------------------------|
+| Importing server code in client      | ❌ Bloats bundle size                       |
+| Leaking env vars                     | ❌ Exposes secrets in browser               |
+| DB queries in browser                | ❌ Major security vulnerability             |
+| Logic duplication or misuse          | ❌ Hard to maintain                         |
+
+Using `server-only` ensures a **clear separation of responsibilities** between your backend and frontend, keeping your app **secure**, **lean**, and **performant**.
+
+---
+
+> 🛡️ Think of `server-only` as a **security guard**: it blocks server code from sneaking into your public-facing JavaScript bundle.
+
+</details>
