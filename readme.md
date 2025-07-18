@@ -3751,8 +3751,3 @@ and import it in the server componnet with the children props
 This approach lets you leverage React Context in modern server components architectures without compromising performance or architectural clarity.
 </details>
 
-<details>
-<summary><strong>Client Component Pattern 1</strong></summary>
-
-
-</details>
