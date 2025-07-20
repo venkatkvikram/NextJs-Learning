@@ -3837,60 +3837,7 @@ For example:
 </details>
 
 
-<details>
-<summary><strong>Interleaving Server and Client Components</strong></summary>
 
-
-1st Pattern: Interleaving Server component inside server component 
-
-
-2nd pattern : 
-Interleaving Client component inside client component 
-
-3rd Pattern : 
-Client component inside a server 
-
-Client Component one inside server component one
-
-4th Pattern : 
-Server component inside a client component
-
-Invoke server component one inside client component one (You will get an error) Why because any component nested inside a client component becomes a client component too.
-
-Instead of nesting server component pass it as a prop to the client component a common approach using react's children prop to create what is called a `slot`. 
-
-So interleaving/page.tsx passes `<ServerComponentOne />` as children props to `<ClientComponentOne />`
-
-```tsx
-export default function InterLeavingPage() {
-    return (
-        <>
-            <h1>Interleaving Page</h1>
-            <ClientComponentOne>
-              <ServerComponentOne />
-            /<ClientComponentOne>
-        </>
-    )
-}
-```
-
-In Client Component One, specify children prop of type `React.ReactNode` and instead of invoking the ServerComponentOne we specify the children prop
-
-```tsx
-export const ClientComponentOne = ({children}: {children: React.ReactNode}) => {
-    const [name, setName] = useState("batman");
-    return
-    (
-        <>
-        
-        <h1>Client Component One</h1>
-        {children}
-        </>
-    )
-}
-```
-
-Recommended pattern for interleaving server and client components in Next.Js
 
 <details>
 <summary><strong>Interleaving Server and Client Components</strong></summary>
@@ -3921,10 +3868,35 @@ Instead of directly nesting a server component inside a client component, **pass
 
 **Example: Interleaving Server and Client Components in Next.js**
 
+`rendering-demo/src/app/interleaving/page.tsx`
+```tsx
+export default function InterLeavingPage() {
+    return (
+        <>
+            <h1>Interleaving Page</h1>
+            <ClientComponentOne>
+              <ServerComponentOne />
+            /<ClientComponentOne>
+        </>
+    )
+}
+```
 
 - `InterLeavingPage` (a server component) renders `<ClientComponentOne>` and passes `<ServerComponentOne />` as a child.
 - In `ClientComponentOne`, specify a `children` prop of type `React.ReactNode` and render it where needed.
-
+```tsx
+export const ClientComponentOne = ({children}: {children: React.ReactNode}) => {
+    const [name, setName] = useState("batman");
+    return
+    (
+        <>
+        
+        <h1>Client Component One</h1>
+        {children}
+        </>
+    )
+}
+```
 ---
 
 **Summary:**  
