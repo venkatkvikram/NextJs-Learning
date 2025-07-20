@@ -3797,7 +3797,8 @@ By properly isolating client-only code, you keep your application safe, robust, 
 
 </details>
 
-# Client Component Patterns  
+<details>
+<summary><strong>Client Component Patterns </strong></summary>
 ## Client Component Placement
 
 The strategic placement of client components in the component tree is **super important for optimizing the performance of your application**.
