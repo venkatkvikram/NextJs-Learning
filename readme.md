@@ -3892,3 +3892,47 @@ export const ClientComponentOne = ({children}: {children: React.ReactNode}) => {
 
 Recommended pattern for interleaving server and client components in Next.Js
 
+<details>
+<summary><strong>Interleaving Server and Client Components</strong></summary>
+
+---
+
+## Patterns of Interleaving
+
+### 1. Server Component inside Server Component  
+No issues. This is the default and works as expected.
+
+### 2. Client Component inside Client Component  
+No issues. Client components can freely compose each other.
+
+### 3. Client Component inside Server Component  
+This is allowed. Example:  
+You can nest a client component (e.g., `ClientComponentOne`) inside a server component (e.g., `ServerComponentOne`).
+
+### 4. Server Component inside Client Component  
+**This will result in an error:**  
+Any component nested inside a client component **becomes a client component too**. You cannot directly render a server component as a child of a client component.
+
+---
+
+## Recommended Solution: The `children` Prop/Slot Pattern
+
+Instead of directly nesting a server component inside a client component, **pass the server component as children to the client component** (a common pattern known as a “slot”).
+
+**Example: Interleaving Server and Client Components in Next.js**
+
+
+- `InterLeavingPage` (a server component) renders `<ClientComponentOne>` and passes `<ServerComponentOne />` as a child.
+- In `ClientComponentOne`, specify a `children` prop of type `React.ReactNode` and render it where needed.
+
+---
+
+**Summary:**  
+- Never directly nest a server component inside a client component.
+- Use the `children` prop to pass server components as slots to client components.
+
+> This is the **recommended interleaving pattern** for composing server and client components in Next.js!
+
+</details>
+
+
