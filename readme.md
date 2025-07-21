@@ -3907,4 +3907,7 @@ export const ClientComponentOne = ({children}: {children: React.ReactNode}) => {
 
 </details>
 
+<details>
+<summary><strong>Data Fetching</strong></summary>
+
 
