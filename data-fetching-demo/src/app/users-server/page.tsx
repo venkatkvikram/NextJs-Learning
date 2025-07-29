@@ -7,7 +7,8 @@ type User = {
 }
 
 export default async function UsersServer() {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users");
+    await new Promise((resolve) => setTimeout(resolve, 2000)) //deliberate delay 
+    const response = await fetch("https://jsonplaceholder.typicode.com/users123");
     const users: User[] = await response.json();
     return (
         <ul className="space-y-4 p-4">

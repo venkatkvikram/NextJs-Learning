@@ -3947,26 +3947,33 @@ Use Client Components **only** when:
 You can directly use `fetch()` or any async function in Server Components. For example:
 
 ```tsx
-// app/products/page.tsx (Server Component)
-
-async function getProducts() {
-  const res = await fetch("https://api.example.com/products");
-  return res.json();
+//data-fetching-demo/src/app/users-server/page.tsx (Server Component)
+type User = {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+    phone: string;
 }
 
-export default async function ProductsPage() {
-  const products = await getProducts();
-
-  return (
-    <div>
-      <h1>Products</h1>
-      <ul>
-        {products.map(p => (
-          <li key={p.id}>{p.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
+export default async function UsersServer() {
+    const response = await fetch("https://jsonplaceholder.typicode.com/users");
+    const users: User[] = await response.json();
+    return (
+        <ul className="space-y-4 p-4">
+            {users.map((user) => (
+                <li key={user.id}
+                className="p-4 bg-white shadow-md rounded-lg text-gray-700" >
+                    <div className="font-bold">{user.name}</div>
+                    <div className="text-sm">
+                        <div>Username: {user.username}</div>
+                        <div>Email : {user.email}</div>
+                        <div>Phone: {user.phone}</div>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    )
 }
 ```
 
@@ -3985,6 +3992,8 @@ Sometimes, **multiple components** fetch the **same data**. For example:
 ```
 
 Instead of triggering the same request 6 times, **React automatically deduplicates** identical fetch calls **during the same render pass**.
+
+![React memoization](./data-fetching-demo/public/Request%20Memoization/Request_Memoization.png)
 
 #### ✅ Benefits:
 
