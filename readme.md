@@ -3910,4 +3910,104 @@ export const ClientComponentOne = ({children}: {children: React.ReactNode}) => {
 <details>
 <summary><strong>Data Fetching</strong></summary>
 
+## 🔄 Section 3: Data Fetching and Mutations
+
+In real-world applications, data is rarely hardcoded. Instead, it's fetched from external sources like APIs or databases.
+
+With the **App Router** built on **React Server Components (RSC)** architecture, Next.js gives you the flexibility to fetch data using either **Server Components** or **Client Components**.
+
+---
+
+### 🧠 Why Prefer Server Components for Data Fetching?
+
+✅ Server Components offer powerful benefits:
+
+- 🔌 **Direct Access to Backends**: Fetch data directly from databases or file systems.
+- 🚀 **Performance**: Being closer to the data source reduces latency.
+- 📦 **Smaller Client Bundle**: Less code shipped to the browser.
+- 🔐 **Security**: API keys and sensitive logic remain on the server.
+
+> 📌 Server components support `async/await` natively for data fetching.
+
+---
+
+### ⚠️ When to Use Client Components for Fetching?
+
+Use Client Components **only** when:
+
+- You need **real-time updates**
+- Your data depends on **client-side interactions** (e.g., user clicks, geolocation)
+
+> For everything else, fetch in Server Components.
+
+---
+
+### 📥 Fetching Data in Server Components
+
+You can directly use `fetch()` or any async function in Server Components. For example:
+
+```tsx
+// app/products/page.tsx (Server Component)
+
+async function getProducts() {
+  const res = await fetch("https://api.example.com/products");
+  return res.json();
+}
+
+export default async function ProductsPage() {
+  const products = await getProducts();
+
+  return (
+    <div>
+      <h1>Products</h1>
+      <ul>
+        {products.map(p => (
+          <li key={p.id}>{p.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+---
+
+### 🔁 React’s Request Deduplication
+
+Sometimes, **multiple components** fetch the **same data**. For example:
+
+```
+📦 Component Tree
+├── Header         ─┐
+├── Sidebar        ─┤
+├── MainContent    ─┼── All use → fetch("/api/user")
+├── ProfileCard    ─┘
+```
+
+Instead of triggering the same request 6 times, **React automatically deduplicates** identical fetch calls **during the same render pass**.
+
+#### ✅ Benefits:
+
+- No manual prop-drilling.
+- Co-locate data fetching where needed.
+- Avoid unnecessary requests.
+
+---
+
+### 🔁 Summary
+
+| Feature                              | Server Component           | Client Component                      |
+|--------------------------------------|-----------------------------|----------------------------------------|
+| Can fetch from databases/API         | ✅                          | ✅ (via fetch/axios)                   |
+| Automatically deduplicates requests  | ✅                          | ❌                                     |
+| Keeps client bundle small            | ✅                          | ❌ (increases JS shipped)             |
+| Can use server-only logic            | ✅                          | ❌                                     |
+| Best for                             | Most data-fetching needs    | Real-time data, user-specific queries |
+
+---
+
+> 💡 **Best Practice**: Co-locate data fetching in Server Components for simplicity, performance, and security.
+
+</details>
+
 
