@@ -4028,4 +4028,16 @@ Instead of triggering the same request 6 times, **React automatically deduplicat
 We can improve this by not blocking the UI while fetching the author details. We want to show the post first and stream the author in the background. 
 
 We can do this by wrapping author component in a suspense boundary
+Data fetching patterns
+When fetching data inside components, you need to be aware of two data fetching patterns:
+1. Sequential
+2. Parallel
+Sequential: requests in a component tree are dependent on each other. This can lead to longer loading times.
+
+We'll create a Posts component
+- fetches all posts
+- for each post, fetch author using the userld property
+- example of sequential fetching because we need the userld from each post before we can fetch its author
+
+
 </details>
