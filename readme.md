@@ -4019,25 +4019,105 @@ Instead of triggering the same request 6 times, **React automatically deduplicat
 
 </details>
 <details>
-<summary><strong>Data Fetching patterns [Sequential Data Fetching]</strong></summary>
+<summary><strong>📌 Data Fetching Patterns – Sequential Data Fetching</strong></summary>
+
+### 🔍 What is Sequential Data Fetching?
+
+Sequential fetching means that one network request depends on the result of a previous one.  
+In our case, we first fetch **posts**, and only after getting the `userId` from each post, we fetch the corresponding **author**.
+
+This results in a *sequential pattern*:
+- Step 1: Get all posts.
+- Step 2: For each post, get the author's details using `userId`.
+
+---
+
+### ⚠️ Problem
+
+Sequential fetching can increase the overall loading time since each dependent request waits for the previous one to complete.
+
+---
+
+### ✅ Solution
+
+We can use **React Suspense** to avoid blocking the UI. Instead of waiting for author data to load before rendering anything, we:
+- Render the post first.
+- Fetch the author in the background.
+- Show a fallback (like "Loading author...") until the data is ready.
+
+---
+
+### 🧱 Components Used
+
+#### `author.tsx`
+
+```tsx
+type Author = {
+    id: number;
+    name : string;
+}
+
+export default async function Author({ userId }: { userId: number }) {
+    const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${userId}`
+    );
+    const user: Author = await response.json();
+
+    return (
+        <div className="text-sm text-gray-500">
+            Written by:{" "}
+            <span className="font-semibold text-gray-700 hover:text-gray-900 transition-colors">
+                {user.name}
+            </span>
+        </div>
+    );
+}
 
 
+// /posts-sequential/page.tsx
+import { Suspense } from "react";
+import Author from "./author";
 
-//Each author request has to wait for the posts request to complete bcoz we need userId from individual posts.
+type Post = {
+    userId: number;
+    id: number;
+    title: string;
+    body: string;
+}
 
-We can improve this by not blocking the UI while fetching the author details. We want to show the post first and stream the author in the background. 
+export default async function PostsSequential() {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const posts: Post[] = await response.json();
 
-We can do this by wrapping author component in a suspense boundary
-Data fetching patterns
-When fetching data inside components, you need to be aware of two data fetching patterns:
-1. Sequential
-2. Parallel
-Sequential: requests in a component tree are dependent on each other. This can lead to longer loading times.
+    const filteredPosts = posts.filter((post) => post.id % 10 === 1);
 
-We'll create a Posts component
-- fetches all posts
-- for each post, fetch author using the userld property
-- example of sequential fetching because we need the userld from each post before we can fetch its author
+    return (
+        <div className="p-4 max-w-7xl mx-auto">
+            <h1 className="text-3xl font-extrabold mb-8">Blog Posts</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {filteredPosts.map((post) => (
+                    <div key={post.id} className="bg-white shadow-md rounded-lg p-6">
+                        <h2 className="text-2xl font-bold mb-3 text-gray-800 leading-tight">
+                            {post.title}
+                        </h2>
+                        <p className="text-gray-600 mb-4 leading-relaxed">{post.body}</p>
 
+                        <Suspense fallback={
+                            <div className="text-sm text-gray-500">Loading author...</div>
+                        }>
+                            <Author userId={post.userId} />
+                        </Suspense>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+```
 
+### 💡 Key Takeaways
+
+- This is an example of **sequential data fetching** because the `Author` request relies on the `userId` from each `Post`.
+- We **improve UX** by using `<Suspense>` to stream the author info after the post is rendered.
+- Helps keep components modular and the UI responsive.
 </details>
