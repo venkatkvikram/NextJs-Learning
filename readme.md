@@ -4018,5 +4018,14 @@ Instead of triggering the same request 6 times, **React automatically deduplicat
 > 💡 **Best Practice**: Co-locate data fetching in Server Components for simplicity, performance, and security.
 
 </details>
+<details>
+<summary><strong>Data Fetching patterns [Sequential Data Fetching]</strong></summary>
 
 
+
+//Each author request has to wait for the posts request to complete bcoz we need userId from individual posts.
+
+We can improve this by not blocking the UI while fetching the author details. We want to show the post first and stream the author in the background. 
+
+We can do this by wrapping author component in a suspense boundary
+</details>
